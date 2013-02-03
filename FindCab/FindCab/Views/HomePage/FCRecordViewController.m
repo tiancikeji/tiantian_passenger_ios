@@ -337,8 +337,13 @@
     if (![dict isKindOfClass:[NSDictionary class]]) {
         return;
     }
-    textEnd.text = [[resultArray objectAtIndex:0] valueForKey:@"NAME"];
+    NSString *strResult = [[resultArray objectAtIndex:0] valueForKey:@"NAME"];
+    [self performSelectorOnMainThread:@selector(setSoundResult:) withObject:strResult waitUntilDone:NO];
 	NSLog(@"%@",resultArray);
+}
+
+- (void)setSoundResult:(NSString *)strResult{
+    textEnd.text = strResult;
 }
 
 - (void)recordEnd{
