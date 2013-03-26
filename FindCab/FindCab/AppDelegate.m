@@ -18,7 +18,7 @@
     _mapManager = [[BMKMapManager alloc]init];
 	BOOL ret = [_mapManager start:@"8BB7F0E5C9C77BD6B9B655DB928B74B6E2D838FD" generalDelegate:self];
 	if (!ret) {
-		NSLog(@"manager start failed!"); 
+		NSLog(@"manager start  failed!"); 
 	}
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
