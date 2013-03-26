@@ -114,7 +114,7 @@
     
     UIImage *imgBtn = [UIImage imageNamed:@"btn_style1"];
     UIButton *btnRegist = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [btnRegist setFrame:CGRectMake((self.view.frame.size.width-imgBtn.size.width)/2.0, 240, imgBtn.size.width, imgBtn.size.height)];
+    [btnRegist setFrame:CGRectMake((self.view.frame.size.width-imgBtn.size.width)/2.0, 220, imgBtn.size.width, imgBtn.size.height)];
     [btnRegist setBackgroundImage:imgBtn forState:UIControlStateNormal];
     [btnRegist setTitle:@"注册" forState:UIControlStateNormal];
     [btnRegist setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -124,12 +124,12 @@
 
 - (BOOL)checkInputData{
     if (![FCCheckData isValidatePhoneNumber:textUserName.text]) {
-        [FCHUD showErrorWithStatus:@"请输入正确的手机号码" duration:2.5];
+        [FCHUD showErrorWithStatus:@"请输入正确的手机号码"];
         [textUserName becomeFirstResponder];
         return NO;
     }
     if (!textPassword.text || textPassword.text.length==0) {
-        [FCHUD showErrorWithStatus:@"请输入密码" duration:2.5];
+        [FCHUD showErrorWithStatus:@"请输入密码"];
         [textPassword becomeFirstResponder];
         return NO;
     }

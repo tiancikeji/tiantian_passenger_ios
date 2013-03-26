@@ -17,7 +17,7 @@
     NSString *strNaviTitle;
     UIButton *btnNaviLeft,*btnNaviRight;
 }
-@property (nonatomic, retain) NSString *strNaviTitle;
+@property (nonatomic, strong) NSString *strNaviTitle;
 
 - (void)goBack;
 - (void)createNaviBar;

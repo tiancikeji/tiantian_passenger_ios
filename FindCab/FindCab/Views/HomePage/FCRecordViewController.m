@@ -9,7 +9,12 @@
 #import "FCRecordViewController.h"
 #import "FCHomePageViewController.h"
 
+#define TFTag 2000
+#define PRICETAG 1000
+
 @interface FCRecordViewController ()
+
+- (void)selectPrice:(UIButton *)sender;//选择加价
 
 @end
 
@@ -41,27 +46,27 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self createNaviBar];
     self.strNaviTitle = @"叫车";
-    [self createNaviBtnLeft:[UIImage imageNamed:@"cancel_normal"] title:nil];
-    [btnNaviLeft addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    [self createNaviBtnRight:[UIImage imageNamed:@"cancel_normal"] title:nil];
+    [btnNaviRight addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     
     [self loadContent];
     
     // get initalization parameters
     // 获得初始化参数，
-	NSString *initParam = [[NSString alloc] initWithFormat:
-						   @"server_url=%@,appid=%@",ENGINE_URL,APPID];
+//	NSString *initParam = [[NSString alloc] initWithFormat:
+//						   @"server_url=%@,appid=%@",ENGINE_URL,APPID];
     
 	// init the RecognizeControl
     // 初始化语音识别控件
-	_iFlyRecognizeControl = [[IFlyRecognizeControl alloc] initWithOrigin:H_CONTROL_ORIGIN initParam:initParam];
-	
+//	_iFlyRecognizeControl = [[IFlyRecognizeControl alloc] initWithOrigin:H_CONTROL_ORIGIN initParam:initParam];
+//	
     
     
     // Configure the RecognizeControl
     // 设置语音识别控件的参数,具体参数可参看开发文档
-	[_iFlyRecognizeControl setEngine:@"poi" engineParam:nil grammarID:nil];
-	[_iFlyRecognizeControl setSampleRate:16000];
-	_iFlyRecognizeControl.delegate = self;
+//	[_iFlyRecognizeControl setEngine:@"poi" engineParam:nil grammarID:nil];
+//	[_iFlyRecognizeControl setSampleRate:16000];
+//	_iFlyRecognizeControl.delegate = self;
     
     
 //    UIButton *btnRecord = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -84,14 +89,6 @@
 //    [btnFly addTarget:self action:@selector(fly) forControlEvents:UIControlEventTouchUpInside];
 //    [self.view addSubview:btnFly];
     
-    UIImage *imgBtn = [UIImage imageNamed:@"btn_style1"];
-    UIButton *btnSend = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [btnSend setFrame:CGRectMake((self.view.frame.size.width-imgBtn.size.width)/2.0, 180, imgBtn.size.width, imgBtn.size.height)];
-    [btnSend setBackgroundImage:imgBtn forState:UIControlStateNormal];
-    [btnSend setTitle:@"确认" forState:UIControlStateNormal];
-    [btnSend setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [btnSend addTarget:self action:@selector(send) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:btnSend];
     
 //    UIButton *btnSend = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 //    [btnSend setFrame:CGRectMake(100, 250, 120, 30)];
@@ -99,12 +96,12 @@
 //    [btnSend addTarget:self action:@selector(send) forControlEvents:UIControlEventTouchUpInside];
 //    [self.view addSubview:btnSend];
     
-    NSError *error;
-    AVAudioSession * audioSession = [AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error: &error];
-    [audioSession setActive:YES error: &error];
-    
-    [self.view addSubview:_iFlyRecognizeControl];
+//    NSError *error;
+//    AVAudioSession * audioSession = [AVAudioSession sharedInstance];
+//    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error: &error];
+//    [audioSession setActive:YES error: &error];
+//    
+//    [self.view addSubview:_iFlyRecognizeControl];
 	// Do any additional setup after loading the view.
 }
 
@@ -112,6 +109,11 @@
     mainContent = sender;
 }
 
+/*
+ 
+ 叫车界面 所有布局加载
+ 
+ */
 - (void)loadContent{
     for (int i = 0; i < 2; i++) {
         UIImageView *imgInputBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"input_bg"]];
@@ -126,16 +128,16 @@
         textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         textField.clearButtonMode = UITextFieldViewModeWhileEditing;
         textField.font = [UIFont systemFontOfSize:14];
-        
+        [textField setTag:TFTag+i];
         if (i == 0) {
             textStart = textField;
-            
-            btnClear = [UIButton buttonWithType:UIButtonTypeCustom];
-            UIImage *imgIcon = [UIImage imageNamed:@"icon_delete2"];
-            [btnClear setImage:imgIcon forState:UIControlStateNormal];
-            [btnClear setFrame:CGRectMake(imgInputBg.frame.size.width-10-imgIcon.size.width, (imgInputBg.frame.size.height-imgIcon.size.height)/2.0, imgIcon.size.width, imgIcon.size.height)];
-            [btnClear addTarget:self action:@selector(clickClearBtn) forControlEvents:UIControlEventTouchUpInside];
-            [imgInputBg addSubview:btnClear];
+            /* 消除文字 新需求无 */
+//            btnClear = [UIButton buttonWithType:UIButtonTypeCustom];
+//            UIImage *imgIcon = [UIImage imageNamed:@"icon_delete2"];
+//            [btnClear setImage:imgIcon forState:UIControlStateNormal];
+//            [btnClear setFrame:CGRectMake(imgInputBg.frame.size.width-10-imgIcon.size.width, (imgInputBg.frame.size.height-imgIcon.size.height)/2.0, imgIcon.size.width, imgIcon.size.height)];
+//            [btnClear addTarget:self action:@selector(clickClearBtn) forControlEvents:UIControlEventTouchUpInside];
+//            [imgInputBg addSubview:btnClear];
             
             imgLocation = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"my_location"]];
             CGRect frame = imgLocation.frame;
@@ -148,26 +150,89 @@
             textField.placeholder = @"请输入目的地";
             textEnd = textField;
             
-            UIButton *btnTalk = [UIButton buttonWithType:UIButtonTypeCustom];
-            UIImage *imgIcon = [UIImage imageNamed:@"icon_mircophone"];
-            [btnTalk setImage:imgIcon forState:UIControlStateNormal];
-            [btnTalk setFrame:CGRectMake(imgInputBg.frame.size.width-10-imgIcon.size.width, (imgInputBg.frame.size.height-imgIcon.size.height)/2.0, imgIcon.size.width, imgIcon.size.height)];
-            [btnTalk addTarget:self action:@selector(clickTalkBtn) forControlEvents:UIControlEventTouchUpInside];
-            [imgInputBg addSubview:btnTalk];
+//            UIButton *btnTalk = [UIButton buttonWithType:UIButtonTypeCustom];
+//            UIImage *imgIcon = [UIImage imageNamed:@"icon_mircophone"];
+//            [btnTalk setImage:imgIcon forState:UIControlStateNormal];
+//            [btnTalk setFrame:CGRectMake(imgInputBg.frame.size.width-10-imgIcon.size.width, (imgInputBg.frame.size.height-imgIcon.size.height)/2.0, imgIcon.size.width, imgIcon.size.height)];
+//            [btnTalk addTarget:self action:@selector(clickTalkBtn) forControlEvents:UIControlEventTouchUpInside];
+//            [imgInputBg addSubview:btnTalk];
         }
         
         [imgInputBg addSubview:textField];
     }
 
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(35, 180, 40,50)];
+    [label setText:@"加价:"];
+    [label setFont:[UIFont systemFontOfSize:15]];
+    [self.view addSubview:label];
+    
+    UIImage *price = [UIImage imageNamed:@"selected"];
+    UIImage *unPrice = [UIImage imageNamed:@"unselected"];
+    for (int i = 0; i<5; i++) {
+        UIButton *priceBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [priceBtn setFrame:CGRectMake(0, 0, price.size.width, price.size.height)];
+        [priceBtn setCenter:CGPointMake(label.frame.origin.x + label.frame.size.width/2 + (25+ price.size.width/2)*(i+1),label.center.y)];
+        [priceBtn setBackgroundImage:unPrice forState:UIControlStateNormal];
+        [priceBtn setBackgroundImage:price forState:UIControlStateSelected];
+        [priceBtn.titleLabel setFont:[UIFont systemFontOfSize:12]];
+        [priceBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [priceBtn setTag:i+PRICETAG];
+        switch (i) {
+            case 0:
+                priceBtn.selected = YES;
+                [priceBtn setTitle:@"0元" forState:UIControlStateNormal];
+                break;
+            case 1:
+                [priceBtn setTitle:@"5元" forState:UIControlStateNormal];
+                break;
+            case 2:
+                [priceBtn setTitle:@"10元" forState:UIControlStateNormal];
+                break;
+            case 3:
+                [priceBtn setTitle:@"15元" forState:UIControlStateNormal];
+                break;
+            case 4:
+                [priceBtn setTitle:@"20元" forState:UIControlStateNormal];
+                break;
+            default:
+                break;
+        }
+        [priceBtn addTarget:self action:@selector(selectPrice:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:priceBtn];
+    }
+    
+    UIImage *imgBtn = [UIImage imageNamed:@"btn_style1"];
+    UIButton *btnSend = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [btnSend setFrame:CGRectMake((self.view.frame.size.width-imgBtn.size.width)/2.0, 250, imgBtn.size.width, imgBtn.size.height)];
+    [btnSend setBackgroundImage:imgBtn forState:UIControlStateNormal];
+    [btnSend setTitle:@"确认" forState:UIControlStateNormal];
+    [btnSend setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [btnSend addTarget:self action:@selector(send) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:btnSend];
 }
 
-- (void)clickClearBtn{
-    [btnClear setHidden:YES];
-    [imgLocation setHidden:YES];
-    isUserLocation = NO;
-    textStart.userInteractionEnabled = YES;
-    [textStart becomeFirstResponder];
+/*
+ 价格选择切换
+ */
+- (void)selectPrice:(UIButton *)sender
+{
+    sender.selected = YES;
+    for (int i= PRICETAG; i<PRICETAG+5; i++) {
+        if (i!=sender.tag) {
+            UIButton *btn = (UIButton *)[self.view viewWithTag:i];
+            btn.selected = NO;
+        }
+    }
 }
+
+/* 我的位置清除位置按钮  需求改变 */
+//- (void)clickClearBtn{
+//    [btnClear setHidden:YES];
+//    [imgLocation setHidden:YES];
+//    isUserLocation = NO;
+//    textStart.userInteractionEnabled = YES;
+//    [textStart becomeFirstResponder];
+//}
 
 - (void)clickTalkBtn{
     [self fly];
@@ -348,6 +413,26 @@
 
 - (void)recordEnd{
     [recorder stop];
+}
+
+#pragma mark
+#pragma mark UITextFieldDelegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    InputLocationViewController *inputLocation = [[InputLocationViewController alloc] initWithNibName:@"InputLocationViewController" bundle:nil];
+    [self presentModalViewController:inputLocation animated:YES];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
 }
 
 - (void)didReceiveMemoryWarning

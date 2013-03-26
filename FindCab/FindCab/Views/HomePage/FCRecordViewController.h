@@ -12,6 +12,7 @@
 #import "iflyMSC/IFlyRecognizeControl.h"
 #import "iFlyMSC/IFlySynthesizerControl.h"
 #import "FCConversationRequest.h"
+#import "InputLocationViewController.h"
 
 @interface FCRecordViewController : FCBaseViewController<AVAudioRecorderDelegate,UpLoadControllerDelegate,IFlyRecognizeControlDelegate,IFlyRecognizeControlDelegate,UITextFieldDelegate>{
     

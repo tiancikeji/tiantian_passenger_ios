@@ -28,6 +28,16 @@
     mainsender = sender;
 }
 
+- (void)startRequest:(NSString *)stringData
+{
+    NSString *data=[NSString stringWithFormat:@"%@%@&%@",FC_BASE_URL,strUrl,stringData];
+    NSLog(@"%@",data);
+//    NSData *dealData=[data dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:data]];
+    [request setHTTPMethod:@"GET"];
+    connection =[[NSURLConnection alloc] initWithRequest:request delegate:self
+                                  ];
+}
 - (void)startQueryAndParse:(NSMutableDictionary *)dictData{
     NSLog(@"param:%@",dictData);
     SBJsonWriter *jsonWriter = [SBJsonWriter new];

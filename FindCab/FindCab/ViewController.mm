@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "FCLoginViewController.h"
+#import "FCLoginCheckViewController.h"
 
 
 @interface ViewController ()
@@ -19,7 +19,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    controller = [[FCHomePageViewController alloc] init];
+    controller = [[FCLoginCheckViewController alloc] init];
     //controller = [[FCLoginViewController alloc] init];
     naviCtrl = [[UINavigationController alloc] initWithRootViewController:controller];
     naviCtrl.navigationBarHidden = YES;

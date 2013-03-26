@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FCHomePageViewController.h"
-#import "FCLoginViewController.h"
+#import "FCLoginCheckViewController.h"
 
 @interface ViewController : UIViewController{
-    FCHomePageViewController *controller;
+    FCLoginCheckViewController *controller;
     //FCLoginViewController *controller;
     UINavigationController *naviCtrl;
 }

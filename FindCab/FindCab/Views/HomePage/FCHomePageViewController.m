@@ -49,7 +49,7 @@
     newRegion.span.longitudeDelta = 0.03;
     [myMapView setRegion:newRegion];
     
-    [self loadNoteView];
+    [self loadNoteView];//加载
     [self loadToolBar];
     
 //    UIButton *btnLocation = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -82,6 +82,11 @@
 	// Do any additional setup after loading the view.
 }
 
+/*
+ 
+ 现在打车按钮背景
+ 
+ */
 - (void)loadToolBar{
     imgToolbar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"home_toolbar"]];
     imgToolbar.userInteractionEnabled = YES;
@@ -94,6 +99,11 @@
     
 }
 
+/*
+ 
+ 进入登陆注册界面 新版本不需要 待注释
+ 
+ */
 - (void)showLoginPage{
     FCLoginViewController *controller = [[FCLoginViewController alloc] init];
     controller.homePageCtrl = self;
@@ -101,6 +111,11 @@
     [self presentModalViewController:naviCtrl animated:YES];
 }
 
+/*
+ 
+ 取消打车和现在打车 两个按钮的切换
+ 
+ */
 - (void)showCallBtn:(BOOL)status{
     if (status) {
         if (!btnCall) {
@@ -146,6 +161,11 @@
     }
 }
 
+/*
+ 
+ 控制司机信息的显示和消失
+ 
+ */
 - (void)showDriverContent:(BOOL)status{
     if (status) {
         if (!driverInfoView) {
@@ -163,6 +183,11 @@
     }
 }
 
+/*
+ 
+ 五公里范围内 导航view
+ 
+ */
 - (void)loadNoteView{
     imgNote = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"driver_count"]];
     imgNote.userInteractionEnabled = YES;
@@ -171,19 +196,19 @@
     imgNote.frame = frame;
     [self.view addSubview:imgNote];
     
-    UIImage *imgLocation = [UIImage imageNamed:@"location_normal"];
-    UIImage *imgLocationHighlight = [UIImage imageNamed:@"location_highlight"];
+    UIImage *imgLocation = [UIImage imageNamed:@"btn_refresh"];
+    UIImage *imgLocationHighlight = [UIImage imageNamed:@"btn_refreshA"];
     UIButton *btnLocation = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnLocation.frame = CGRectMake(0, 0, 44, 40);
+    btnLocation.frame = CGRectMake(10, 10, imgLocation.size.width, imgLocation.size.height);
     [btnLocation setImage:imgLocation forState:UIControlStateNormal];
     [btnLocation setImage:imgLocationHighlight forState:UIControlStateHighlighted];
     [btnLocation addTarget:self action:@selector(showLocation) forControlEvents:UIControlEventTouchUpInside];
     [imgNote addSubview:btnLocation];
     
-    UIImage *imgProfile = [UIImage imageNamed:@"profile_normal"];
-    UIImage *imgProfileHighlight = [UIImage imageNamed:@"profile_highlight"];
+    UIImage *imgProfile = [UIImage imageNamed:@"btn_setting"];
+    UIImage *imgProfileHighlight = [UIImage imageNamed:@"btn_settingA"];
     UIButton *btnProfile = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnProfile.frame = CGRectMake(imgNote.frame.size.width-44, 0, 44, 40);
+    btnProfile.frame = CGRectMake(imgNote.frame.size.width-35, 10, imgProfile.size.width, imgProfile.size.height);
     [btnProfile setImage:imgProfile forState:UIControlStateNormal];
     [btnProfile setImage:imgProfileHighlight forState:UIControlStateHighlighted];
     [btnProfile addTarget:self action:@selector(showProfile) forControlEvents:UIControlEventTouchUpInside];
@@ -198,6 +223,11 @@
     [imgNote addSubview:labelSearchCount];
 }
 
+/*
+ 
+ 根据当前位置坐标 和公里范围 获取所有司机的坐标和其他信息
+ 
+ */
 - (void)getDrivers{
     [self performSelector:@selector(getDrivers) withObject:nil afterDelay:10];
     //NSString *strToken = [[KTData sharedObject] getToken];
@@ -218,6 +248,11 @@
     [response startQueryAndParse:dict];
 }
 
+/*
+ 
+ 获取司机信息成功 存储司机信息 地图上更新司机位置 更新状态栏司机数量
+ 
+ */
 - (void)queryFinished:(NSString *)strData{
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
     NSError *parseError = nil;
@@ -248,11 +283,16 @@
             [arrayDrivers addObject:driver];
         }
     }
-    [self addDriverLocation];
+    [self addDriverLocation];//更新地图司机位置
     [self updateSearchCount];
     [FCHUD dismiss];
 }
 
+/*
+ 
+ 更新状态栏司机数量
+ 
+ */
 - (void)updateSearchCount{
     if ([arrayAnn count] == 0) {
         labelSearchCount.text = @"抱歉，您周围暂时没有出租车";
@@ -261,6 +301,11 @@
     labelSearchCount.text = [NSString stringWithFormat:@"%d辆出租车，5公里范围",[arrayAnn count]];
 }
 
+/*
+ 
+ 地图上添加司机位置
+ 
+ */
 - (void)addDriverLocation{
     if (arrayAnn) {
         [myMapView removeAnnotations:arrayAnn];
@@ -284,6 +329,11 @@
     [myMapView addAnnotations:arrayAnn];
 }
 
+/*
+ 
+  刷新地图
+ 
+ */
 - (void)showLocation{
     [myMapView setShowsUserLocation:YES];
     newRegion.center = coorUser;
@@ -292,16 +342,21 @@
 
 NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 
+/*
+ 
+ 现在打车 
+ 
+ */
 - (void)clickCallBtn{
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"haveLogin"]) {
-        [self showLoginPage];
-        return;
-    }
-    FCRecordViewController *controller = [[FCRecordViewController alloc] init];
-    controller.passenger = passenger;
-    controller.coorUser = coorUser;
-    [self.navigationController pushViewController:controller animated:YES];
-    [controller performSelector:@selector(setMainContent:) withObject:self];
+//    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"haveLogin"]) {
+//        [self showLoginPage];
+//        return;
+//    }
+    FCRecordViewController *recordController = [[FCRecordViewController alloc] init];
+    recordController.passenger = passenger;
+    recordController.coorUser = coorUser;
+    [self.navigationController pushViewController:recordController animated:YES];
+    [recordController performSelector:@selector(setMainContent:) withObject:self];
 }
 
 //click cancel/oncar btn
@@ -419,6 +474,11 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     }
 }
 
+/*
+ 
+ 控制是否显示取消打车按钮
+ 
+ */
 - (void)showCancelBtn:(BOOL)status{
     if (status) {
         if (!btnCancelRequest) {
@@ -440,6 +500,9 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     }
 }
 
+/*
+ 点击取消打车按钮
+ */
 - (void)clickCancelRequestBtn{
     [NSThread cancelPreviousPerformRequestsWithTarget:self selector:@selector(getMyTripConversations) object:nil];
     [self showCancelBtn:NO];

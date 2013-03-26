@@ -39,5 +39,5 @@ HTTPRequestType;
 
 - (void)startQueryAndParse:(NSMutableDictionary *)dictData;
 - (void)setDelegate:(id)sender;
-
+- (void)startRequest:(NSString *)stringData;
 @end

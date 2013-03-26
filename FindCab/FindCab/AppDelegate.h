@@ -20,4 +20,5 @@
 
 @property (strong, nonatomic) ViewController *viewController;
 
+- (BOOL) isConnectionAvailable;
 @end
