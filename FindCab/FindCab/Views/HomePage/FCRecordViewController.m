@@ -15,6 +15,9 @@
 @interface FCRecordViewController ()
 
 - (void)selectPrice:(UIButton *)sender;//选择加价
+- (void)refreshStarting:(NSNotification *)notifi;//刷新起点文字
+- (void)refreshEnding:(NSNotification *)notifi;//刷新终点文字
+- (void)keyboardWillShow:(NSNotification *)notify;
 
 @end
 
@@ -37,6 +40,22 @@
 //    }
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    for(UIView *sub in self.view.subviews)
+    {
+        for (UIView *text in sub.subviews)
+        {
+            if ([text isKindOfClass:[UITextField class]]) {
+                UITextField *t = (UITextField *)text;
+                [t resignFirstResponder];
+            }
+        }
+    }
+    
+}
+
 #define H_CONTROL_ORIGIN CGPointMake(20, 70)
 - (void)viewDidLoad
 {
@@ -46,10 +65,18 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self createNaviBar];
     self.strNaviTitle = @"叫车";
-    [self createNaviBtnRight:[UIImage imageNamed:@"cancel_normal"] title:nil];
+    [self createNaviBtnRight:[UIImage imageNamed:@"cancel"] title:nil];
     [btnNaviRight addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     
     [self loadContent];
+    
+    /* 通知中心 */
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshStarting:) name:@"REFRESHSTARTING" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshEnding:) name:@"REFRESHENDING" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
     
     // get initalization parameters
     // 获得初始化参数，
@@ -225,6 +252,36 @@
     }
 }
 
+/*
+  起点赋值
+ */
+- (void)refreshStarting:(NSNotification *)notifi
+{
+    if (!_starting) {
+        
+    }
+}
+
+/*
+  重点信息赋值
+ */
+- (void)refreshEnding:(NSNotification *)notifi
+{
+    if (!_ending) {
+        
+    }
+}
+
+- (void)keyboardWillShow:(NSNotification *)notify
+{
+    for(id sub in self.view.subviews)
+    {
+        if ([sub isKindOfClass:[UITextField class]]) {
+            UITextField *t = (UITextField *)sub;
+            [t resignFirstResponder];
+        }
+    }
+}
 /* 我的位置清除位置按钮  需求改变 */
 //- (void)clickClearBtn{
 //    [btnClear setHidden:YES];
@@ -234,6 +291,7 @@
 //    [textStart becomeFirstResponder];
 //}
 
+/* 新需求无
 - (void)clickTalkBtn{
     [self fly];
 }
@@ -266,14 +324,15 @@
     [recorder record];
     //There is an optional method for doing the recording for a limited time see
     //[recorder recordForDuration:(NSTimeInterval) 10]
-}
+}*/
 
-- (void)play{
-    NSError *error;
-    AVAudioPlayer * avPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:recordedTmpFile error:&error];
-    [avPlayer prepareToPlay];
-    [avPlayer play];
-}
+/* 新需求无  注释掉 
+//- (void)play{
+//    NSError *error;
+//    AVAudioPlayer * avPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:recordedTmpFile error:&error];
+//    [avPlayer prepareToPlay];
+//    [avPlayer play];
+//}
 
 - (void)fly{
     if([_iFlyRecognizeControl start])
@@ -281,6 +340,8 @@
 		btnFly.userInteractionEnabled = NO;
 	}
 }
+*/
+
 
 - (void)send{
     
@@ -356,6 +417,8 @@
 }
 
 
+/*  关于语音识别 新需求无 
+ 
 #pragma mark
 #pragma mark 接口回调
 
@@ -414,13 +477,23 @@
 - (void)recordEnd{
     [recorder stop];
 }
+ 
+ */
+
+
 
 #pragma mark
 #pragma mark UITextFieldDelegate
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    InputLocationViewController *inputLocation = [[InputLocationViewController alloc] initWithNibName:@"InputLocationViewController" bundle:nil];
+    FCInputLocationViewController *inputLocation = [[FCInputLocationViewController alloc] initWithNibName:@"InputLocationViewController" bundle:nil];
+    if (textField.tag==TFTag) {
+        inputLocation.starting = YES;
+    }else{
+        inputLocation.starting = NO;
+    }
+    inputLocation.passenger = self.passenger;
     [self presentModalViewController:inputLocation animated:YES];
 }
 

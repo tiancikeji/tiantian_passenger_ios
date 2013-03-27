@@ -31,7 +31,7 @@
 }
 
 - (void)createNaviBar{
-    imgvNavBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    imgvNavBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 59)];
     imgvNavBar.userInteractionEnabled = YES;
     imgvNavBar.image = [UIImage imageNamed:@"navi_bar"];//[[UIImage imageNamed:@"title_bar"] stretchableImageWithLeftCapWidth:10 topCapHeight:0];
     [self.view addSubview:imgvNavBar];
@@ -58,7 +58,10 @@
         btnNaviLeft = [UIButton buttonWithType:UIButtonTypeCustom];
         btnNaviLeft.frame = CGRectMake(BTN_PADDING_LEFT, (imgvNavBar.frame.size.height-sz.height)/2.0, sz.width, sz.height);
         [btnNaviLeft setBackgroundImage:img forState:UIControlStateNormal];
+        [btnNaviLeft setBackgroundImage:[UIImage imageNamed:@"cancelA"] forState:UIControlStateHighlighted];
         btnNaviLeft.titleLabel.font = [UIFont systemFontOfSize:14];
+        [btnNaviLeft setTitle:@"取消" forState:UIControlStateNormal];
+        [btnNaviRight setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         if (strTitle) {
             [btnNaviLeft setTitle:strTitle forState:UIControlStateNormal];
             [btnNaviLeft setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -75,6 +78,9 @@
         btnNaviRight = [UIButton buttonWithType:UIButtonTypeCustom];
         btnNaviRight.frame = CGRectMake(imgvNavBar.frame.size.width-BTN_PADDING_RIGHT-sz.width, (imgvNavBar.frame.size.height-sz.height)/2.0, sz.width, sz.height);
         [btnNaviRight setBackgroundImage:img forState:UIControlStateNormal];
+        [btnNaviRight setTitle:@"取消" forState:UIControlStateNormal];
+        [btnNaviRight setBackgroundImage:[UIImage imageNamed:@"cancelA"] forState:UIControlStateHighlighted];
+        [btnNaviRight setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         btnNaviRight.titleLabel.font = [UIFont systemFontOfSize:14];
         if (strTitle) {
             [btnNaviRight setTitle:strTitle forState:UIControlStateNormal];

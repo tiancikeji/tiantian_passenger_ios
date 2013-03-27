@@ -44,7 +44,7 @@
     [self createNaviBar];
     self.strNaviTitle = @"登录";
     
-    //[self createNaviBtnRight:[UIImage imageNamed:@"cancel_normal"] title:nil];
+    //[self createNaviBtnRight:[UIImage imageNamed:@"cancel"] title:nil];
     [self createNaviBtnRight:[UIImage imageNamed:@"navibar_btn"] title:@"注册"];
     [btnNaviRight addTarget:self action:@selector(goSignupPage) forControlEvents:UIControlEventTouchUpInside];
     [self createNaviBtnLeft:[UIImage imageNamed:@"navibar_btn"] title:@"返回"];
@@ -193,12 +193,12 @@
 
 - (BOOL)checkInputData{
     if (![FCCheckData isValidatePhoneNumber:textUserName.text]) {
-        [FCHUD showErrorWithStatus:@"请输入正确的手机号码" duration:2.5];
+        [FCHUD showErrorWithStatus:@"请输入正确的手机号码"];
         [textUserName becomeFirstResponder];
         return NO;
     }
     if (!textPassword.text || textPassword.text.length==0) {
-        [FCHUD showErrorWithStatus:@"请输入密码" duration:2.5];
+        [FCHUD showErrorWithStatus:@"请输入密码"];
         [textPassword becomeFirstResponder];
         return NO;
     }

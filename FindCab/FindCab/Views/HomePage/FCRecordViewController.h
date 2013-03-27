@@ -12,7 +12,8 @@
 #import "iflyMSC/IFlyRecognizeControl.h"
 #import "iFlyMSC/IFlySynthesizerControl.h"
 #import "FCConversationRequest.h"
-#import "InputLocationViewController.h"
+#import "FCInputLocationViewController.h"
+#import "AddressInfo.h"
 
 @interface FCRecordViewController : FCBaseViewController<AVAudioRecorderDelegate,UpLoadControllerDelegate,IFlyRecognizeControlDelegate,IFlyRecognizeControlDelegate,UITextFieldDelegate>{
     
@@ -35,5 +36,11 @@
 }
 @property (nonatomic, strong) Passenger *passenger;
 @property (nonatomic, assign) CLLocationCoordinate2D coorUser;
+
+/*
+  存储用户输入的地点和终点信息
+ */
+@property (nonatomic, strong) AddressInfo *starting;
+@property (nonatomic, strong) AddressInfo *ending;
 
 @end

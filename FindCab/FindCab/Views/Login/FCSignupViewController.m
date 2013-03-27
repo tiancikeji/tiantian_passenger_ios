@@ -32,7 +32,7 @@
     [super viewDidLoad];
     [self createNaviBar];
     self.strNaviTitle = @"注册";
-    [self createNaviBtnLeft:[UIImage imageNamed:@"cancel_normal"] title:nil];
+    [self createNaviBtnLeft:[UIImage imageNamed:@"cancel"] title:nil];
     [btnNaviLeft addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     
     self.view.backgroundColor = [UIColor whiteColor];

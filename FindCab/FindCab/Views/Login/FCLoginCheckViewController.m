@@ -12,14 +12,13 @@
 {
     int second;
 }
-
-- (void)createNaviBar;//创建自定义navigationBar;
 - (void)loadContent;
 - (BOOL)checkInData;//验证输入是否正确
 - (void)getVertiCode:(UIButton *)sender;//获取验证码
 - (void)submitButton:(UIButton *)sender;
 - (void)countDown;//倒计时
 - (void)intoMap:(NSNumber *)uid haveLogin:(BOOL)login;//进入主页
+
 @end
 
 @implementation FCLoginCheckViewController
@@ -37,7 +36,7 @@
 {
     [super viewDidLoad];
     [self  createNaviBar];
-//    [self setStrNaviTitle:@"手机验证"];
+    [self setStrNaviTitle:@"手机验证"];
     self.navigationController.navigationBarHidden = YES;
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self loadContent];
@@ -50,20 +49,20 @@
 	// Do any additional setup after loading the view.
 }
 
-- (void)createNaviBar{
-    imgvNavBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-    imgvNavBar.userInteractionEnabled = YES;
-    imgvNavBar.image = [UIImage imageNamed:@"navi_bar"];//[[UIImage imageNamed:@"title_bar"] stretchableImageWithLeftCapWidth:10 topCapHeight:0];
-    [self.view addSubview:imgvNavBar];
-    
-    labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, imgvNavBar.frame.size.height)];
-    labelTitle.textAlignment = UITextAlignmentCenter;
-    labelTitle.font = [UIFont boldSystemFontOfSize:18.0];
-    //labelTitle.textColor = [UIColor whiteColor];
-    labelTitle.text = @"手机验证";
-    labelTitle.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:labelTitle];
-}
+//- (void)createNaviBar{
+//    imgvNavBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 59)];
+//    imgvNavBar.userInteractionEnabled = YES;
+//    imgvNavBar.image = [UIImage imageNamed:@"navi_bar"];//[[UIImage imageNamed:@"title_bar"] stretchableImageWithLeftCapWidth:10 topCapHeight:0];
+//    [self.view addSubview:imgvNavBar];
+//    
+//    labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, imgvNavBar.frame.size.height)];
+//    labelTitle.textAlignment = UITextAlignmentCenter;
+//    labelTitle.font = [UIFont boldSystemFontOfSize:18.0];
+//    //labelTitle.textColor = [UIColor whiteColor];
+//    labelTitle.text = @"手机验证";
+//    labelTitle.backgroundColor = [UIColor clearColor];
+//    [self.view addSubview:labelTitle];
+//}
 
 /* 加载界面 */
 - (void)loadContent{
@@ -71,7 +70,7 @@
     UIImageView *imgInputBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"input_bg.png"]];
     imgInputBg.userInteractionEnabled = YES;
     CGRect frame = imgInputBg.frame;
-    frame.origin = CGPointMake(25,70);
+    frame.origin = CGPointMake(25,80);
     imgInputBg.frame = frame;
     [self.view addSubview:imgInputBg];
     
@@ -88,10 +87,10 @@
     UIImageView *verCode = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tf_vertiCode"]];
     verCode.userInteractionEnabled = YES;
     //    frame.origin = CGPointMake(25,90);
-    verCode.frame = CGRectMake(25, 130,verCode.frame.size.width ,verCode.frame.size.height);
+    verCode.frame = CGRectMake(25, 135,verCode.frame.size.width ,verCode.frame.size.height);
     [self.view addSubview:verCode];
     
-    _vertifiCodeField = [[UITextField alloc] initWithFrame:CGRectMake(35, 130,verCode.frame.size.width - 50, verCode.frame.size.height)];
+    _vertifiCodeField = [[UITextField alloc] initWithFrame:CGRectMake(35, 135,verCode.frame.size.width - 50, verCode.frame.size.height)];
     _vertifiCodeField.delegate = self;
     _vertifiCodeField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _vertifiCodeField.clearButtonMode = UITextFieldViewModeWhileEditing;

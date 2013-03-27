@@ -1,33 +1,30 @@
 //
-//  SearchBarView.m
+//  FCCustomToolbar.m
 //  FindCab
 //
-//  Created by paopao on 13-3-26.
+//  Created by paopao on 13-3-27.
 //  Copyright (c) 2013年 Tiantian. All rights reserved.
 //
 
-#import "SearchBarView.h"
+#import "FCCustomToolbar.h"
 
-@implementation SearchBarView
+@implementation FCCustomToolbar
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        UIImage *image = [UIImage imageNamed:@"nav_bar"];
-        [self setBackgroundColor:[UIColor colorWithPatternImage:image]];
-        [self setFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
+        // Initialization code
     }
     return self;
 }
 
-/*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    // Drawing code
+    UIImage *img  = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"navi_bar" ofType:@"png"]];
+    [img drawInRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
 }
-*/
 
 @end
