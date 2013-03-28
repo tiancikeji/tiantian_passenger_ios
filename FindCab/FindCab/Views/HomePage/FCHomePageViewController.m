@@ -13,7 +13,7 @@
 #import "FCDriverAnnotation.h"
 #import "AppDelegate.h"
 #import "Conversation.h"
-#import "FCLoginViewController.h"
+//#import "FCLoginViewController.h"
 
 @interface FCHomePageViewController ()
 
@@ -41,13 +41,14 @@
     [myMapView setShowsUserLocation:YES];
     [self.view addSubview:myMapView];
     
-    coorUser.latitude = 39.915;
-    coorUser.longitude = 116.404;
+    locationManager = [[CLLocationManager alloc] init];
+    [locationManager setDelegate:self];
+    [locationManager startUpdatingLocation];
     
-    newRegion.center = coorUser;
-    newRegion.span.latitudeDelta = 0.03;
-    newRegion.span.longitudeDelta = 0.03;
-    [myMapView setRegion:newRegion];
+//    coorUser = myMapView.userLocation.coordinate;
+//    newRegion.center = coorUser;
+
+
     
     [self loadNoteView];//加载
     [self loadToolBar];
@@ -76,8 +77,8 @@
     
     [FCHUD showWithStatus:@"正在加载"];
     [self getDrivers];
-    
-    
+
+    [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(getDrivers) userInfo:nil repeats:YES];
     //[self showDriverContent:YES];
 	// Do any additional setup after loading the view.
 }
@@ -104,12 +105,12 @@
  进入登陆注册界面 新版本不需要 待注释
  
  */
-- (void)showLoginPage{
-    FCLoginViewController *controller = [[FCLoginViewController alloc] init];
-    controller.homePageCtrl = self;
-    UINavigationController *naviCtrl = [[UINavigationController alloc] initWithRootViewController:controller];
-    [self presentModalViewController:naviCtrl animated:YES];
-}
+//- (void)showLoginPage{
+//    FCLoginViewController *controller = [[FCLoginViewController alloc] init];
+//    controller.homePageCtrl = self;
+//    UINavigationController *naviCtrl = [[UINavigationController alloc] initWithRootViewController:controller];
+//    [self presentModalViewController:naviCtrl animated:YES];
+//}
 
 /*
  
@@ -199,7 +200,7 @@
     UIImage *imgLocation = [UIImage imageNamed:@"btn_refresh"];
     UIImage *imgLocationHighlight = [UIImage imageNamed:@"btn_refreshA"];
     UIButton *btnLocation = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnLocation.frame = CGRectMake(10, 10, imgLocation.size.width, imgLocation.size.height);
+    btnLocation.frame = CGRectMake(13, 13, imgLocation.size.width, imgLocation.size.height);
     [btnLocation setImage:imgLocation forState:UIControlStateNormal];
     [btnLocation setImage:imgLocationHighlight forState:UIControlStateHighlighted];
     [btnLocation addTarget:self action:@selector(showLocation) forControlEvents:UIControlEventTouchUpInside];
@@ -208,7 +209,7 @@
     UIImage *imgProfile = [UIImage imageNamed:@"btn_setting"];
     UIImage *imgProfileHighlight = [UIImage imageNamed:@"btn_settingA"];
     UIButton *btnProfile = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnProfile.frame = CGRectMake(imgNote.frame.size.width-35, 10, imgProfile.size.width, imgProfile.size.height);
+    btnProfile.frame = CGRectMake(imgNote.frame.size.width-32, 13, imgProfile.size.width, imgProfile.size.height);
     [btnProfile setImage:imgProfile forState:UIControlStateNormal];
     [btnProfile setImage:imgProfileHighlight forState:UIControlStateHighlighted];
     [btnProfile addTarget:self action:@selector(showProfile) forControlEvents:UIControlEventTouchUpInside];
@@ -233,6 +234,11 @@
     //NSString *strToken = [[KTData sharedObject] getToken];
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
+    /* 
+     此处获取司机的经纬度范围随着用户拖动地图 显示范围不断变化 传递的是显示范围 而非五公里
+     
+     新需求:显示可视范围内的司机 接口需改变
+     */
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",coorUser.latitude],@"driver[lat]",[NSString stringWithFormat:@"%f",coorUser.longitude],@"driver[lng]", @"5",@"scope",nil];
     
 //    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"39.915",@"driver[lat]",@"116.404",@"driver[lng]", @"5",@"scope",nil];
@@ -335,6 +341,7 @@
  
  */
 - (void)showLocation{
+    [locationManager startUpdatingLocation];
     [myMapView setShowsUserLocation:YES];
     newRegion.center = coorUser;
     [myMapView setRegion:newRegion];
@@ -368,8 +375,22 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     imgNote.hidden = NO;
 }
 
+#pragma mark
+#pragma mark - BMKMapViewDelegate Methods
+
+//地图区域改变
+- (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    userRegion = myMapView.region;
+}
+
 - (void)mapView:(BMKMapView *)mapView didUpdateUserLocation:(BMKUserLocation *)userLocation{
     coorUser = userLocation.coordinate;
+    newRegion.center = coorUser;
+    newRegion.span.latitudeDelta = 0.03;
+    newRegion.span.longitudeDelta = 0.03;
+    [myMapView setRegion:newRegion];
+    [locationManager stopUpdatingLocation];
 }
 
 - (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation{

@@ -15,6 +15,8 @@ static NSString *const STCellIdentifier = @"STCell";
     FCSTView *_customView;
     NSArray *_datasource;
     NSMutableArray *_searchDatasource;
+    BMKMapView *_map;
+    BMKSearch *_search;
 }
 @end
 
@@ -25,9 +27,10 @@ static NSString *const STCellIdentifier = @"STCell";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.navigationController.navigationBarHidden  =YES;
+        [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"allBg.png"]]];
         //        [[self navigationItem] setTitle:@"Search Display Controller!"];
         _datasource = @[@"Apple", @"Banana", @"Orange", @"Grape"];
-//        _searchDatasource = [NSMutableArray new];
+//        _searchDatasource = n
     }
     return self;
 }
@@ -46,12 +49,24 @@ static NSString *const STCellIdentifier = @"STCell";
     [_customView.searchField addSubview:myPosition];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [_customView.searchField becomeFirstResponder];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [_map setDelegate:self];
+    _search = [[BMKSearch alloc] init];
+    [_search setDelegate:self];
+//    [_search poiSearchNearBy:nil center:_map.userLocation radius:360 pageIndex:1];
     [[_customView tableView] setDelegate:self];
     [[_customView tableView] setDataSource:self];
-    [[_customView tableView] registerClass:[UITableViewCell class] forCellReuseIdentifier:STCellIdentifier];
+//    if ([[_customView tableView] respondsToSelector:@selector(registerClass:forCellReuseIdentifier:)]) {
+//        [[_customView tableView] registerClass:[UITableViewCell class] forCellReuseIdentifier:STCellIdentifier];
+//    }
 	// Do any additional setup after loading the view.
 }
 
@@ -87,6 +102,9 @@ static NSString *const STCellIdentifier = @"STCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STCellIdentifier];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:STCellIdentifier];
+    }
     
 //    NSArray *datasouce = [tableView isEqual:[_customView tableView]] ? _datasource : _searchDatasource;
    NSArray * datasouce = (![_searchDatasource count])?_datasource:_searchDatasource;
@@ -104,6 +122,10 @@ static NSString *const STCellIdentifier = @"STCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if ([self.delegate respondsToSelector:@selector(inputLocationViewController:selectedLocation:)]) {
+        [self.delegate inputLocationViewController:self selectedLocation:cell.textLabel.text];
+    }
     if (self.starting) {
         
     }else{

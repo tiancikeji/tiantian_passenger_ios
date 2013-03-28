@@ -15,7 +15,7 @@
 - (void)loadContent;
 - (BOOL)checkInData;//验证输入是否正确
 - (void)getVertiCode:(UIButton *)sender;//获取验证码
-- (void)submitButton:(UIButton *)sender;
+- (void)submitButton:(UIButton *)sender;//提交验证
 - (void)countDown;//倒计时
 - (void)intoMap:(NSNumber *)uid haveLogin:(BOOL)login;//进入主页
 
@@ -27,7 +27,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"allBg.png"]]];
     }
     return self;
 }
@@ -78,7 +78,7 @@
     _phoneNumberField.delegate = self;
     _phoneNumberField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _phoneNumberField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    _phoneNumberField.font = [UIFont systemFontOfSize:14];
+    _phoneNumberField.font = [UIFont systemFontOfSize:13];
     _phoneNumberField.keyboardType = UIKeyboardTypeNumberPad;
     _phoneNumberField.placeholder = @"请输入手机号码";
     [imgInputBg addSubview:_phoneNumberField];
@@ -94,7 +94,7 @@
     _vertifiCodeField.delegate = self;
     _vertifiCodeField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _vertifiCodeField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    _vertifiCodeField.font = [UIFont systemFontOfSize:14];
+    _vertifiCodeField.font = [UIFont systemFontOfSize:13];
     _vertifiCodeField.keyboardType = UIKeyboardAppearanceDefault;
     _vertifiCodeField.placeholder = @"请输入验证码";
     [self.view addSubview:_vertifiCodeField];
@@ -138,15 +138,18 @@
     }
     [self intoMap:[NSNumber numberWithInt:2] haveLogin:YES];
     
-//    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"HAVELOGIN"]) {
-//        [self intoMap:[[NSUserDefaults standardUserDefaults] objectForKey:@"uid"] haveLogin:YES];
-//    }
-//    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:phoneNumber,@"mobile",verfifyCode,[GBUtility encode:verfifyCode],nil];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"HAVELOGIN"]) {
+        [self intoMap:[[NSUserDefaults standardUserDefaults] objectForKey:@"uid"] haveLogin:YES];
+    }
+
+//    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    NSString *deviceUID = appDelegate.strDeviceToken;
+//    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"haha",@"name",phoneNumber,@"mobile",verfifyCode,@"password",deviceUID,@"iosDevice",nil];
 //    FCServiceResponse *response = [[FCServiceResponse alloc] init];
 //    [response setDelegate:self];
 //    response.strUrl = SUBMITCODE;
 //    response.type = POST;
-//    [response startQueryAndParse:dict];
+//    [response startQueryAndParse:[NSMutableDictionary dictionaryWithObject:dict forKey:@"passenger"]];
 }
 
 - (void)intoMap:(NSNumber *)userID haveLogin:(BOOL)login
@@ -191,9 +194,7 @@
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
     NSError *parseError = nil;
     NSMutableDictionary *dict = (NSMutableDictionary *)[jsonParser objectWithString:strData error:&parseError];
-    if ([[dict valueForKey:@"code"] intValue] == 0) {
-        
-    }else{
+    if ([dict objectForKey:@"passenger"]) {
         if (!_passenger) {
             _passenger = [[Passenger alloc] init];
         }
@@ -236,12 +237,6 @@
         [self.phoneNumberField becomeFirstResponder];
         return NO;
     }
-//    if (!self.vertifiCodeField.text || self.vertifiCodeField.text.length==0) {
-//        //        [FCHUD showErrorWithStatus:@"请输入密码" duration:2.5];
-//        [FCHUD showErrorWithStatus:@"请输入正确的验证码"];
-//        [self.vertifiCodeField becomeFirstResponder];
-//        return NO;
-//    }
     return YES;
 }
 

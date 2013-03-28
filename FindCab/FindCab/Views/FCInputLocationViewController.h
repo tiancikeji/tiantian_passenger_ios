@@ -8,13 +8,23 @@
 
 #import <UIKit/UIKit.h>
 #import "FCSTView.h"
-#import "Passenger.h"
+#import "BMapKit.h"
 
-@interface FCInputLocationViewController : UIViewController<FCSTViewDelegate>
+@protocol  FCInputLocationViewControllerDelegate;
+
+@interface FCInputLocationViewController : UIViewController<FCSTViewDelegate,BMKMapViewDelegate,BMKSearchDelegate>
 {
     UIImageView *myPosition;
 }
 @property (nonatomic) BOOL starting;
-@property (nonatomic, strong) Passenger *passenger;
+@property (nonatomic, unsafe_unretained) id <FCInputLocationViewControllerDelegate>delegate;
 
 @end
+
+@protocol FCInputLocationViewControllerDelegate <NSObject>
+
+- (void)inputLocationViewController:(FCInputLocationViewController *)controller
+                   selectedLocation:(NSString *)selectionMessage;
+
+@end
+

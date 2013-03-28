@@ -20,13 +20,13 @@
 
 @interface FCSTView : UIView<UITextFieldDelegate>
 {
-    id <FCSTViewDelegate> _delegate;
+
 }
 
 @property (nonatomic,strong ,readonly) UITableView *tableView;
 //@property (nonatomic,strong, readonly) UISearchBar *searchBar;
 @property (nonatomic,strong) UITextField *searchField;
-@property (nonatomic, strong) id <FCSTViewDelegate> delegate;
+@property (nonatomic, unsafe_unretained) id <FCSTViewDelegate> delegate;
 @property (nonatomic, strong) NSMutableArray *historyArray;
 
 @end

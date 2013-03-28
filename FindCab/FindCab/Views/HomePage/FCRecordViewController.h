@@ -15,7 +15,7 @@
 #import "FCInputLocationViewController.h"
 #import "AddressInfo.h"
 
-@interface FCRecordViewController : FCBaseViewController<AVAudioRecorderDelegate,UpLoadControllerDelegate,IFlyRecognizeControlDelegate,IFlyRecognizeControlDelegate,UITextFieldDelegate>{
+@interface FCRecordViewController : FCBaseViewController<AVAudioRecorderDelegate,UpLoadControllerDelegate,IFlyRecognizeControlDelegate,IFlyRecognizeControlDelegate, FCInputLocationViewControllerDelegate>{
     
     IFlyRecognizeControl		*_iFlyRecognizeControl;         //识别控件,recognizer
     AVAudioRecorder *recorder;
@@ -23,7 +23,7 @@
     
     UIButton *btnFly;
     
-    UITextField *textStart,*textEnd;
+    UIButton *textStart,*textEnd;
     UIButton *btnClear;
     UIImageView *imgLocation;
     

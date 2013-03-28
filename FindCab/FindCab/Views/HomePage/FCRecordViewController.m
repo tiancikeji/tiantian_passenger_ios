@@ -15,9 +15,10 @@
 @interface FCRecordViewController ()
 
 - (void)selectPrice:(UIButton *)sender;//选择加价
-- (void)refreshStarting:(NSNotification *)notifi;//刷新起点文字
-- (void)refreshEnding:(NSNotification *)notifi;//刷新终点文字
-- (void)keyboardWillShow:(NSNotification *)notify;
+- (void)refreshStarting;//刷新起点文字
+- (void)refreshEnding;//刷新终点文字
+//- (void)keyboardWillShow:(NSNotification *)notify;
+- (void)intoLocation:(UIButton *)sender;//进入叫车地点输入界面
 
 @end
 
@@ -28,7 +29,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"allBg.png"]]];
     }
     return self;
 }
@@ -40,9 +41,9 @@
 //    }
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:YES];
+    [super viewDidAppear:YES];
     for(UIView *sub in self.view.subviews)
     {
         for (UIView *text in sub.subviews)
@@ -53,8 +54,24 @@
             }
         }
     }
-    
 }
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:YES];
+    for(UIView *sub in self.view.subviews)
+    {
+        for (UIView *text in sub.subviews)
+        {
+            if ([text isKindOfClass:[UITextField class]]) {
+                UITextField *t = (UITextField *)text;
+                [t resignFirstResponder];
+            }
+        }
+    }
+
+}
+
 
 #define H_CONTROL_ORIGIN CGPointMake(20, 70)
 - (void)viewDidLoad
@@ -71,12 +88,12 @@
     [self loadContent];
     
     /* 通知中心 */
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshStarting:) name:@"REFRESHSTARTING" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshEnding:) name:@"REFRESHENDING" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshStarting:) name:@"REFRESHSTARTING" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshEnding:) name:@"REFRESHENDING" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(keyboardWillShow:)
+//                                                 name:UIKeyboardWillShowNotification
+//                                               object:nil];
     
     // get initalization parameters
     // 获得初始化参数，
@@ -143,21 +160,24 @@
  */
 - (void)loadContent{
     for (int i = 0; i < 2; i++) {
-        UIImageView *imgInputBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"input_bg"]];
-        imgInputBg.userInteractionEnabled = YES;
-        CGRect frame = imgInputBg.frame;
-        frame.origin = CGPointMake(25, imgvNavBar.frame.size.height+25+50*i);
-        imgInputBg.frame = frame;
-        [self.view addSubview:imgInputBg];
+        UIImage *inputBg = [UIImage imageNamed:@"input_bg.png"];
+//        UIImageView *imgInputBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"input_bg"]];
+//        imgInputBg.userInteractionEnabled = YES;
+//        CGRect frame = imgInputBg.frame;
+//        frame.origin = CGPointMake(25, imgvNavBar.frame.size.height+25+50*i);
+//        imgInputBg.frame = frame;
+//        [self.view addSubview:imgInputBg];
         
-        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 0, imgInputBg.frame.size.width-50, imgInputBg.frame.size.height)];
-        textField.delegate = self;
-        textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-        textField.font = [UIFont systemFontOfSize:14];
-        [textField setTag:TFTag+i];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.contentVerticalAlignment = UIControlContentHorizontalAlignmentLeft;
+        [button setBackgroundImage:inputBg forState:UIControlStateNormal];
+        [button setBackgroundImage:inputBg forState:UIControlStateHighlighted];
+        [button addTarget:self action:@selector(intoLocation:) forControlEvents:UIControlEventTouchUpInside];
+        [button setFrame:CGRectMake(25, imgvNavBar.frame.size.height+25+50*i, inputBg.size.width,inputBg.size.height)];
+        
+        [button setTag:TFTag+i];
         if (i == 0) {
-            textStart = textField;
+            textStart = button;
             /* 消除文字 新需求无 */
 //            btnClear = [UIButton buttonWithType:UIButtonTypeCustom];
 //            UIImage *imgIcon = [UIImage imageNamed:@"icon_delete2"];
@@ -170,12 +190,12 @@
             CGRect frame = imgLocation.frame;
             frame.origin = CGPointMake(4, 5);
             imgLocation.frame = frame;
-            [imgInputBg addSubview:imgLocation];
+            [button addSubview:imgLocation];
             
         }
         else {
-            textField.placeholder = @"请输入目的地";
-            textEnd = textField;
+            [button setTitle:@"请输入目的地" forState:UIControlStateNormal];
+            textEnd = button;
             
 //            UIButton *btnTalk = [UIButton buttonWithType:UIButtonTypeCustom];
 //            UIImage *imgIcon = [UIImage imageNamed:@"icon_mircophone"];
@@ -185,7 +205,7 @@
 //            [imgInputBg addSubview:btnTalk];
         }
         
-        [imgInputBg addSubview:textField];
+        [self.view addSubview:button];
     }
 
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(35, 180, 40,50)];
@@ -255,7 +275,7 @@
 /*
   起点赋值
  */
-- (void)refreshStarting:(NSNotification *)notifi
+- (void)refreshStarting
 {
     if (!_starting) {
         
@@ -263,25 +283,28 @@
 }
 
 /*
-  重点信息赋值
+  终点信息赋值
  */
-- (void)refreshEnding:(NSNotification *)notifi
+- (void)refreshEnding
 {
     if (!_ending) {
         
     }
 }
 
-- (void)keyboardWillShow:(NSNotification *)notify
+- (void)intoLocation:(UIButton *)sender
 {
-    for(id sub in self.view.subviews)
-    {
-        if ([sub isKindOfClass:[UITextField class]]) {
-            UITextField *t = (UITextField *)sub;
-            [t resignFirstResponder];
-        }
+    FCInputLocationViewController *inputLocation = [[FCInputLocationViewController alloc] initWithNibName:@"InputLocationViewController" bundle:nil];
+    inputLocation.delegate = self;
+    if (sender.tag==TFTag) {
+        inputLocation.starting = YES;
+    }else{
+        inputLocation.starting = NO;
     }
+    [self presentModalViewController:inputLocation animated:YES];
+
 }
+
 /* 我的位置清除位置按钮  需求改变 */
 //- (void)clickClearBtn{
 //    [btnClear setHidden:YES];
@@ -345,12 +368,12 @@
 
 - (void)send{
     
-    if (!isUserLocation && textStart.text.length == 0) {
+    if (!isUserLocation && textStart.titleLabel.text.length == 0) {
         UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:nil message:@"请输入出发地" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [myAlertView show];
         return;
     }
-    if (textEnd.text.length == 0) {
+    if (textEnd.titleLabel.text.length == 0) {
         UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:nil message:@"请输入目的地" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [myAlertView show];
         return;
@@ -368,12 +391,12 @@
     if (isUserLocation) {
         dict = [NSDictionary dictionaryWithObjectsAndKeys:
                 [NSString stringWithFormat:@"%@",passenger.uid],@"passenger_id", [NSString stringWithFormat:@"%f",coorUser.latitude],@"start_lat",[NSString stringWithFormat:@"%f",coorUser.longitude],@"start_lng",
-                textEnd.text,@"end",@"19:00",@"appointment",nil];
+                textEnd.titleLabel.text,@"end",@"19:00",@"appointment",nil];
     }
     else {
         dict = [NSDictionary dictionaryWithObjectsAndKeys:
                 [NSString stringWithFormat:@"%@",passenger.uid],@"passenger_id", @"国贸",@"start",
-                textEnd.text,@"end",@"19:00",@"appointment",nil];
+                textEnd.titleLabel.text,@"end",@"19:00",@"appointment",nil];
     }
     /*NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
                           [NSString stringWithFormat:@"%@",passenger.uid],@"passenger_id", @"国贸",@"start",@"39.915",@"start_lat",@"116.405",@"start_lng",
@@ -481,19 +504,23 @@
  */
 
 
+/* 若用UITextField点击进入地点输入界面 会造成地点输入界面无法获取焦点 键盘无法弹出 这里两个地点输入换成UIButton类型 */
 
+/*
 #pragma mark
 #pragma mark UITextFieldDelegate
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     FCInputLocationViewController *inputLocation = [[FCInputLocationViewController alloc] initWithNibName:@"InputLocationViewController" bundle:nil];
+    inputLocation.delegate = self;
     if (textField.tag==TFTag) {
         inputLocation.starting = YES;
     }else{
         inputLocation.starting = NO;
     }
     inputLocation.passenger = self.passenger;
+    [textField resignFirstResponder];
     [self presentModalViewController:inputLocation animated:YES];
 }
 
@@ -507,11 +534,18 @@
     [textField resignFirstResponder];
     return YES;
 }
+*/
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)inputLocationViewController:(FCInputLocationViewController *)controller
+                   selectedLocation:(NSString *)selectionMessage
+{
+    NSLog(@"%@", selectionMessage);
 }
 
 @end

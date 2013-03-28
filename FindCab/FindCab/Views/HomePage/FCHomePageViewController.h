@@ -20,9 +20,9 @@ enum ConversationType{
     ConversationTypeAccept = 3,
 };
 
-@interface FCHomePageViewController : FCBaseViewController<BMKMapViewDelegate>{
+@interface FCHomePageViewController : FCBaseViewController<BMKMapViewDelegate,CLLocationManagerDelegate>{
     BMKMapView *myMapView;
-    NSMutableArray *arrayDrivers;
+    NSMutableArray *arrayDrivers;//司机信息
     NSMutableArray *arrayAnn;
     UIView *viDriverInfo;
     UILabel *labelCarLicense,*labelMobile,*labelName,*labelRate,*labelSearchCount;
@@ -31,11 +31,12 @@ enum ConversationType{
     FCDriverInfoView *driverInfoView;
     FCWaitingRequestView *waitingRequestView;
     FCConversationRequest *conversationRequest;
-    
-    CLLocationCoordinate2D coorUser;
+    CLLocationManager *locationManager;//用户定位管理器
+    CLLocationCoordinate2D coorUser;//用户位置
     
     BOOL bubbleCanUse;
-    BMKCoordinateRegion newRegion;
+    BMKCoordinateRegion newRegion;//存储当前用户位置及5公司范围
+    BMKCoordinateRegion userRegion;//存储当前地图的显示范围
 }
 @property (nonatomic, strong) NSNumber *converID,*tripID;
 @property (nonatomic, strong) Passenger *passenger;

@@ -15,6 +15,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    /* 使用百度地图 启动BaiduMapManager */
     _mapManager = [[BMKMapManager alloc]init];
 	BOOL ret = [_mapManager start:@"8BB7F0E5C9C77BD6B9B655DB928B74B6E2D838FD" generalDelegate:self];
 	if (!ret) {

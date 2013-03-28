@@ -60,6 +60,8 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+    [textField becomeFirstResponder];
+    NSLog(@"textFieldDidBeginEditing");
     
 }
 
