@@ -558,6 +558,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     }
     if (!_cancelView) {
         _cancelView = [[CancelView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-173, 0, 0)];
+        [_cancelView setDelegate:self];
         [self.view addSubview:_cancelView];
     }else{
         _cancelView.hidden = NO;
