@@ -19,7 +19,7 @@
 
 @class FCHomePageViewController;
 
-@interface FCLoginCheckViewController : FCBaseViewController<UITextFieldDelegate,ServiceResponseDelegate>
+@interface FCLoginCheckViewController : FCBaseViewController<UITextFieldDelegate,FCServiceResponseDelegate>
 {
     NSString *phoneNumber;
     NSString *verfifyCode;

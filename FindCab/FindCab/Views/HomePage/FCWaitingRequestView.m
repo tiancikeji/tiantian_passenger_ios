@@ -22,19 +22,19 @@
 
 - (void)loadContent{
     UIImageView *imgBg = [[UIImageView alloc] initWithFrame:self.bounds];
-    imgBg.image = [UIImage imageNamed:@"waiting_requet_bg.png"];
+    imgBg.image = [UIImage imageNamed:@"waiting_request_bg.png"];
     [self addSubview:imgBg];
     
-    UIImage *loading = [UIImage imageNamed:@"loading"];
+    UIImage *loading = [UIImage imageNamed:@"loading.png"];
     imgLoading = [[UIImageView alloc] initWithImage:nil];
     imgLoading.frame = CGRectMake(0, 0, loading.size.width, loading.size.height);
     imgLoading.center = CGPointMake(25, self.frame.size.height/2.0);
-    
     
     CALayer *logoLayer = [CALayer layer];
     logoLayer.bounds = CGRectMake(0, 0, loading.size.width, loading.size.height);
     logoLayer.position = CGPointMake(15, 15);
     logoLayer.contents = (id)loading.CGImage;
+    
     
     
     int direction = 1;
@@ -48,6 +48,16 @@
     [imgLoading.layer addSublayer:logoLayer];
     
     [self addSubview:imgLoading];
+    
+    _time = [[UILabel alloc] initWithFrame:CGRectMake(7, 3, 20, loading.size.height-10)];
+    [_time setBackgroundColor:[UIColor clearColor]];
+    [_time setTextColor:[UIColor whiteColor]];
+    [_time setText:@"60"];
+    [_time setFont:[UIFont boldSystemFontOfSize:15]];
+    [imgLoading addSubview:_time];
+    timeDown = 60;
+
+    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(count:) userInfo:nil repeats:YES];
     
     for (int i = 0; i < 2; i++) {
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(54, 13+23*i, 200, 15)];
@@ -67,7 +77,19 @@
 	//[imgLoading addAnimation:rotationAnimation forKey:@"rotateAnimation"];
 }
 
+- (void)count:(NSTimer *)timer
+{
+    [_time setText:[NSString stringWithFormat:@"%d",--timeDown]];
+    if (self.hidden == YES || timeDown == 0) {
+        [timer invalidate];
+        [_time setText:@"60"];
+    }
+}
+
 - (void)updateStatus{
+    timeDown = 60;
+    [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(count:) userInfo:nil repeats:YES];
+    [imgLoading.layer animationForKey:@"rotateAnimation"];
 }
 
 /*

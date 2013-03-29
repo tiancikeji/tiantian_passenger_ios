@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol ServiceResponseDelegate <NSObject>
+@protocol FCServiceResponseDelegate <NSObject>
 
 - (void)queryFinished:(NSString *)strData;
 - (void)queryError:(NSError *)errorConnect;
@@ -24,7 +24,7 @@ typedef enum {
 HTTPRequestType;
 
 @interface FCServiceResponse : NSObject{
-    id<ServiceResponseDelegate> m_delegate;
+    id<FCServiceResponseDelegate> m_delegate;
     NSURLConnection*  connection;
     NSArray *_arrayUrl;
     id mainsender;

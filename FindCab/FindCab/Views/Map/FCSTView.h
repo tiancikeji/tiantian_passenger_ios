@@ -20,7 +20,7 @@
 
 @interface FCSTView : UIView<UITextFieldDelegate>
 {
-
+    UIImageView *myPosition;
 }
 
 @property (nonatomic,strong ,readonly) UITableView *tableView;

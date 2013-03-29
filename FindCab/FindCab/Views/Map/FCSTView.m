@@ -18,21 +18,27 @@
         [self setAutoresizesSubviews:YES];
         [self setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
         
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(5, 70, 310, 590) style:UITableViewStylePlain];
+        UIImage *add =[UIImage imageNamed:@"addressBg.png"];
+        UIImageView *addBg = [[UIImageView alloc] initWithImage:add];
+        [addBg setFrame:CGRectMake(10, 70, add.size.width, add.size.height)];
+        [self addSubview:addBg];
+        
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(20, 80, 280, 590) style:UITableViewStylePlain];
         _tableView.backgroundView = nil;
-        [_tableView setBackgroundColor:[UIColor whiteColor]];
+        [_tableView setBackgroundColor:[UIColor clearColor]];
         [[self tableView] setAutoresizingMask:[self autoresizingMask]];
         [self addSubview:[self tableView]];
         
         FCCustomToolbar *bar = [[FCCustomToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 59)];
         
         UIButton *searchbutton = [UIButton buttonWithType:UIButtonTypeCustom];
-        UIImage *bg = [UIImage imageNamed:@"cancel"];
+        UIImage *bg = [UIImage imageNamed:@"cancel.png"];
         [searchbutton setBackgroundImage:bg forState:UIControlStateNormal];
         [searchbutton setFrame:CGRectMake(0, 0, bg.size.width, bg.size.height)];
         [searchbutton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
         [searchbutton setTitle:@"取消" forState:UIControlStateNormal];
-        [searchbutton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [searchbutton.titleLabel setFont:[UIFont systemFontOfSize:15]];
+        [searchbutton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
         
         UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithCustomView:searchbutton];
         UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -40,18 +46,28 @@
         [bar setItems:[NSArray arrayWithObjects:space,cancel, nil]];
         [self addSubview:bar];
         
-        UIImage *searchBg = [UIImage imageNamed:@"searchInput"];
+        UIImage *searchBg = [UIImage imageNamed:@"searchInput.png"];
+        
+        UIImageView *view = [[UIImageView alloc] initWithImage:searchBg];
+        [view setFrame:CGRectMake(10, 0, searchBg.size.width, searchBg.size.height)];
+        [view setCenter:CGPointMake(10+searchBg.size.width/2, bar.frame.size.height/2)];
+        [bar addSubview:view];
+        
         _searchField = [[UITextField alloc] init];
-        [_searchField setBackground:searchBg];
         [_searchField setKeyboardType:UIKeyboardTypeDefault];
         _searchField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         [_searchField setDelegate:self];
         [_searchField becomeFirstResponder];
         [_searchField setReturnKeyType:UIReturnKeyGo];
-        [_searchField setFrame:CGRectMake(10, 0, searchBg.size.width, searchBg.size.height)];
-        [_searchField setCenter:CGPointMake(10+searchBg.size.width/2, bar.frame.size.height/2)];
+        [_searchField setFrame:CGRectMake(5, 0, searchBg.size.width-5, searchBg.size.height)];
         [_searchField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
-        [bar addSubview:_searchField];
+        [view addSubview:_searchField];
+        
+        myPosition = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"my_location"]];
+        CGRect frame = myPosition.frame;
+        myPosition.frame = frame;
+        [myPosition setCenter:CGPointMake(4+frame.size.width/2, _searchField.frame.size.height/2)];
+        [_searchField addSubview:myPosition];
     }
     return self;
 }
@@ -73,6 +89,7 @@
 - (void)textFieldDidChange:(UITextField *)textField
 {
     /* 根据用户信息及输入地址 请求获取该地址相关地点信息 */
+    [myPosition removeFromSuperview];
     [_delegate  loadAddress];
 }
 

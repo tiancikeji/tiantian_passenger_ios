@@ -11,6 +11,8 @@
 #import "BMapKit.h"
 #import "FCDriverInfoView.h"
 #import "FCWaitingRequestView.h"
+#import "FCServiceResponse.h"
+#import "CancelView.h"
 
 @class FCConversationRequest;
 
@@ -20,7 +22,7 @@ enum ConversationType{
     ConversationTypeAccept = 3,
 };
 
-@interface FCHomePageViewController : FCBaseViewController<BMKMapViewDelegate,CLLocationManagerDelegate>{
+@interface FCHomePageViewController : FCBaseViewController<BMKMapViewDelegate,CLLocationManagerDelegate,FCServiceResponseDelegate,CancelViewDelegate>{
     BMKMapView *myMapView;
     NSMutableArray *arrayDrivers;//司机信息
     NSMutableArray *arrayAnn;
@@ -41,5 +43,9 @@ enum ConversationType{
 @property (nonatomic, strong) NSNumber *converID,*tripID;
 @property (nonatomic, strong) Passenger *passenger;
 @property (nonatomic, strong) NSMutableArray *arrayReceiveDrivers;
+@property (nonatomic, strong) UIView *translucentView;
+@property (nonatomic, strong) CancelView *cancelView;
+
+- (void)showWaitingPanel:(NSMutableArray *)array;
 
 @end

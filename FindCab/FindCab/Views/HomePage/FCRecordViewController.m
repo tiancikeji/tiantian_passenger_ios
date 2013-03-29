@@ -82,7 +82,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self createNaviBar];
     self.strNaviTitle = @"叫车";
-    [self createNaviBtnRight:[UIImage imageNamed:@"cancel"] title:nil];
+    [self createNaviBtnRight:[UIImage imageNamed:@"cancel.png"] title:nil];
     [btnNaviRight addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     
     [self loadContent];
@@ -161,19 +161,23 @@
 - (void)loadContent{
     for (int i = 0; i < 2; i++) {
         UIImage *inputBg = [UIImage imageNamed:@"input_bg.png"];
-//        UIImageView *imgInputBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"input_bg"]];
-//        imgInputBg.userInteractionEnabled = YES;
-//        CGRect frame = imgInputBg.frame;
-//        frame.origin = CGPointMake(25, imgvNavBar.frame.size.height+25+50*i);
-//        imgInputBg.frame = frame;
-//        [self.view addSubview:imgInputBg];
+        UIImageView *imgInputBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"input_bg"]];
+        imgInputBg.userInteractionEnabled = YES;
+        CGRect frame = imgInputBg.frame;
+        frame.origin = CGPointMake(25, imgvNavBar.frame.size.height+25+55*i);
+        imgInputBg.frame = frame;
+        [self.view addSubview:imgInputBg];
         
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.contentVerticalAlignment = UIControlContentHorizontalAlignmentLeft;
-        [button setBackgroundImage:inputBg forState:UIControlStateNormal];
-        [button setBackgroundImage:inputBg forState:UIControlStateHighlighted];
+        button.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+        button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+//        [button setBackgroundImage:inputBg forState:UIControlStateNormal];
+//        [button setBackgroundImage:inputBg forState:UIControlStateHighlighted];
+        [button setBackgroundColor:[UIColor clearColor]];
+        
+        
         [button addTarget:self action:@selector(intoLocation:) forControlEvents:UIControlEventTouchUpInside];
-        [button setFrame:CGRectMake(25, imgvNavBar.frame.size.height+25+50*i, inputBg.size.width,inputBg.size.height)];
+        [button setFrame:CGRectMake(30, imgvNavBar.frame.size.height+25+55*i, inputBg.size.width,inputBg.size.height)];
         
         [button setTag:TFTag+i];
         if (i == 0) {
@@ -188,13 +192,15 @@
             
             imgLocation = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"my_location"]];
             CGRect frame = imgLocation.frame;
-            frame.origin = CGPointMake(4, 5);
+            frame.origin = CGPointMake(0, 7);
             imgLocation.frame = frame;
             [button addSubview:imgLocation];
             
         }
         else {
             [button setTitle:@"请输入目的地" forState:UIControlStateNormal];
+            [button.titleLabel setFont:[UIFont systemFontOfSize:14]];
+            [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
             textEnd = button;
             
 //            UIButton *btnTalk = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -208,9 +214,10 @@
         [self.view addSubview:button];
     }
 
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(35, 180, 40,50)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(35, 200, 40,50)];
     [label setText:@"加价:"];
     [label setFont:[UIFont systemFontOfSize:15]];
+    [label setBackgroundColor:[UIColor clearColor]];
     [self.view addSubview:label];
     
     UIImage *price = [UIImage imageNamed:@"selected"];
@@ -250,9 +257,10 @@
     
     UIImage *imgBtn = [UIImage imageNamed:@"btn_style1"];
     UIButton *btnSend = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [btnSend setFrame:CGRectMake((self.view.frame.size.width-imgBtn.size.width)/2.0, 250, imgBtn.size.width, imgBtn.size.height)];
+    [btnSend setFrame:CGRectMake((self.view.frame.size.width-imgBtn.size.width)/2.0, 265, imgBtn.size.width, imgBtn.size.height)];
     [btnSend setBackgroundImage:imgBtn forState:UIControlStateNormal];
     [btnSend setTitle:@"确认" forState:UIControlStateNormal];
+    [btnSend.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
     [btnSend setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [btnSend addTarget:self action:@selector(send) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btnSend];

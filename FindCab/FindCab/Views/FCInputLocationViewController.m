@@ -41,12 +41,6 @@ static NSString *const STCellIdentifier = @"STCell";
     _customView = view;
     [_customView setDelegate:self];
     [self setView:view];
-    
-    myPosition = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"my_location"]];
-    CGRect frame = myPosition.frame;
-    frame.origin = CGPointMake(4,8);
-    myPosition.frame = frame;
-    [_customView.searchField addSubview:myPosition];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -80,7 +74,6 @@ static NSString *const STCellIdentifier = @"STCell";
 
 - (void)loadAddress
 {
-    [myPosition removeFromSuperview];
     _searchDatasource = [NSArray arrayWithObjects:@"haha",@"heihei", @"xixi",@"huhu",nil];
     [_customView.tableView reloadData];
 }
@@ -103,12 +96,13 @@ static NSString *const STCellIdentifier = @"STCell";
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:STCellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:STCellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:STCellIdentifier];
     }
     
 //    NSArray *datasouce = [tableView isEqual:[_customView tableView]] ? _datasource : _searchDatasource;
    NSArray * datasouce = (![_searchDatasource count])?_datasource:_searchDatasource;
     [[cell textLabel] setText:datasouce[[indexPath row]]];
+    [cell.detailTextLabel setText:@"这是个测试"];
     
     return cell;
 }

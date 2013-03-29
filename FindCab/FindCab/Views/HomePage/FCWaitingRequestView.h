@@ -11,7 +11,10 @@
 @interface FCWaitingRequestView : UIView{
     UIImageView *imgLoading;
     UILabel *labelCount;
+    int timeDown;
 }
 @property (nonatomic, strong) UILabel *labelCount;
+@property (nonatomic, strong) UILabel *time;
 
+- (void)count:(NSTimer *)timer;
 @end

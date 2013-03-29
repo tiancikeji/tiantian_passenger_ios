@@ -14,7 +14,7 @@
 
 @interface FCInputLocationViewController : UIViewController<FCSTViewDelegate,BMKMapViewDelegate,BMKSearchDelegate>
 {
-    UIImageView *myPosition;
+
 }
 @property (nonatomic) BOOL starting;
 @property (nonatomic, unsafe_unretained) id <FCInputLocationViewControllerDelegate>delegate;

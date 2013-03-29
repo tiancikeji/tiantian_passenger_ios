@@ -17,6 +17,24 @@
 
 @interface FCHomePageViewController ()
 
+- (void)loadToolBar;//加载工具条图片
+- (void)showCallBtn:(BOOL)status;//控制 “现在打车”按钮 和 取消打车时弹出是否打车界面 的切换
+- (void)showDriverContent:(BOOL)status;//控制 司机信息栏显示和隐藏
+- (void)loadNoteView;//进入地图界面时 加载 司机数量信息的信息栏
+- (void)getDrivers;//从服务器获取用户周围司机数量及位置信息
+- (void)updateSearchCount;//更新搜索司机数量
+- (void)addDriverLocation;//添加司机位置标注
+- (void)showLocation;//刷新地图
+- (void)clickCallBtn;//点击现在打车按钮
+- (void)clickToolBarBtn:(id)sender;//点击取消打车或者继续打车按钮
+- (void)showDriverInfo:(Driver *)driverInfo;//展示司机信息栏
+- (void)showRequestView:(BOOL)status;//显示等待司机响应倒计时栏
+- (void)showCancelBtn:(BOOL)status;//控制是否显示取消打车按钮
+- (void)clickCancelRequestBtn;//点击取消打车按钮 等待响应状态栏消失 取消对话请求
+- (void)showWaitingPanel:(NSMutableArray *)array;//显示有多少司机收到响应的状态栏
+- (void)showAnswerCar;//显示响应车的司机信息
+- (void)showCancelView;//显示取消选择
+
 @end
 
 @implementation FCHomePageViewController
@@ -36,6 +54,7 @@
     [super viewDidLoad];
     
     bubbleCanUse = YES;
+    
     myMapView = [[BMKMapView alloc] initWithFrame:self.view.bounds];
     myMapView.delegate = self;
     [myMapView setShowsUserLocation:YES];
@@ -47,8 +66,6 @@
     
 //    coorUser = myMapView.userLocation.coordinate;
 //    newRegion.center = coorUser;
-
-
     
     [self loadNoteView];//加载
     [self loadToolBar];
@@ -99,18 +116,6 @@
     [self showCallBtn:YES];
     
 }
-
-/*
- 
- 进入登陆注册界面 新版本不需要 待注释
- 
- */
-//- (void)showLoginPage{
-//    FCLoginViewController *controller = [[FCLoginViewController alloc] init];
-//    controller.homePageCtrl = self;
-//    UINavigationController *naviCtrl = [[UINavigationController alloc] initWithRootViewController:controller];
-//    [self presentModalViewController:naviCtrl animated:YES];
-//}
 
 /*
  
@@ -256,6 +261,9 @@
     response.type = GET;
     [response startQueryAndParse:dict];
 }
+
+#pragma mark
+#pragma mark - FCServiceResponseDelegate
 
 /*
  
@@ -486,10 +494,11 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
         if (!waitingRequestView) {
             waitingRequestView = [[FCWaitingRequestView alloc] initWithFrame:CGRectMake(10, 10, 300, 65)];
             [waitingRequestView performSelector:@selector(loadContent)];
+        }else{
+            [waitingRequestView performSelector:@selector(updateStatus)];
         }
         waitingRequestView.hidden = NO;
         [self.view addSubview:waitingRequestView];
-        [waitingRequestView performSelector:@selector(updateStatus)];
     }
     else {
         if (waitingRequestView) {
@@ -530,14 +539,54 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
  点击取消打车按钮
  */
 - (void)clickCancelRequestBtn{
+
+    [self showCancelView];
+}
+
+/*
+ 显示取消打车提示选择
+ */
+- (void)showCancelView
+{
+    if (!_translucentView) {
+        _translucentView = [[UIView alloc] initWithFrame:self.view.bounds];
+        [_translucentView setBackgroundColor:[UIColor blackColor]];
+        [_translucentView setAlpha:0.5];
+        [self.view addSubview:_translucentView];
+    }else{
+        _translucentView.hidden = NO;
+    }
+    if (!_cancelView) {
+        _cancelView = [[CancelView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-173, 0, 0)];
+        [self.view addSubview:_cancelView];
+    }else{
+        _cancelView.hidden = NO;
+    }
+
+}
+
+#pragma mark 
+#pragma mark CancelViewDelegate
+
+- (void)cancelCall
+{
     [NSThread cancelPreviousPerformRequestsWithTarget:self selector:@selector(getMyTripConversations) object:nil];
     [self showCancelBtn:NO];
     [self showRequestView:NO];
-    
     bubbleCanUse = YES;
 }
 
+- (void)continueCall
+{
+    _translucentView.hidden = YES;
+    _cancelView.hidden = YES;
+}
+
 #define CONVERSATION_REFRESH_TIME 10
+
+/*
+ 显示有多少司机收到应答界面
+ */
 - (void)showWaitingPanel:(NSMutableArray *)array{
     bubbleCanUse = NO;
     arrayReceiveDrivers = array;
