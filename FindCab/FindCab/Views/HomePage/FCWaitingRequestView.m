@@ -22,7 +22,7 @@
 
 - (void)loadContent{
     UIImageView *imgBg = [[UIImageView alloc] initWithFrame:self.bounds];
-    imgBg.image = [UIImage imageNamed:@"waiting_requet_bg"];
+    imgBg.image = [UIImage imageNamed:@"waiting_requet_bg.png"];
     [self addSubview:imgBg];
     
     UIImage *loading = [UIImage imageNamed:@"loading"];

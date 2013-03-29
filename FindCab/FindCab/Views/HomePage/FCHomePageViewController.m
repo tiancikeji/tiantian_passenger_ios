@@ -89,7 +89,7 @@
  
  */
 - (void)loadToolBar{
-    imgToolbar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"home_toolbar"]];
+    imgToolbar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"home_toolbar.png"]];
     imgToolbar.userInteractionEnabled = YES;
     CGRect frame = imgToolbar.frame;
     frame.origin = CGPointMake(0, self.view.frame.size.height-frame.size.height);
@@ -121,11 +121,14 @@
     if (status) {
         if (!btnCall) {
             btnCall = [UIButton buttonWithType:UIButtonTypeCustom];
-            UIImage *imgCall = [UIImage imageNamed:@"call_normal"];
-            UIImage *imgCallHighlight = [UIImage imageNamed:@"call_highlight"];
-            [btnCall setFrame:imgToolbar.bounds];
-            [btnCall setImage:imgCall forState:UIControlStateNormal];
-            [btnCall setImage:imgCallHighlight forState:UIControlStateHighlighted];
+            UIImage *imgCall = [UIImage imageNamed:@"btn_call.png"];
+            UIImage *imgCallHighlight = [UIImage imageNamed:@"btn_callA.png"];
+            [btnCall setFrame:CGRectMake(0, 0, imgCall.size.width, imgCall.size.height)];
+            [btnCall setCenter:CGPointMake(imgToolbar.frame.size.width/2, imgToolbar.frame.size.height/2)];
+            [btnCall setBackgroundImage:imgCall forState:UIControlStateNormal];
+            [btnCall setTitle:@"开始叫车" forState:UIControlStateNormal];
+            [btnCall.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
+            [btnCall setBackgroundImage:imgCallHighlight forState:UIControlStateHighlighted];
             [btnCall addTarget:self action:@selector(clickCallBtn) forControlEvents:UIControlEventTouchUpInside];
             [imgToolbar addSubview:btnCall];
         }
@@ -140,7 +143,7 @@
         if (!btnCancel) {
             for (int i = 0; i < 2; i++) {
                 UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-                UIImage *imgNormal = [UIImage imageNamed:i==0?@"car_cancel":@"on_car"];
+                UIImage *imgNormal = [UIImage imageNamed:i==0?@"car_cancel.png":@"on_car.png"];
                 [btn setImage:imgNormal forState:UIControlStateNormal];
                 [btn setFrame:CGRectMake(8+155*i, (imgToolbar.frame.size.height-imgNormal.size.height)/2.0, imgNormal.size.width, imgNormal.size.height)];
                 [btn addTarget:self action:@selector(clickToolBarBtn:) forControlEvents:UIControlEventTouchUpInside];
@@ -190,26 +193,26 @@
  
  */
 - (void)loadNoteView{
-    imgNote = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"driver_count"]];
+    imgNote = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"driver_count.png"]];
     imgNote.userInteractionEnabled = YES;
     CGRect frame = imgNote.frame;
     frame.origin = CGPointMake(9, 9);
     imgNote.frame = frame;
     [self.view addSubview:imgNote];
     
-    UIImage *imgLocation = [UIImage imageNamed:@"btn_refresh"];
-    UIImage *imgLocationHighlight = [UIImage imageNamed:@"btn_refreshA"];
+    UIImage *imgLocation = [UIImage imageNamed:@"btn_refresh.png"];
+    UIImage *imgLocationHighlight = [UIImage imageNamed:@"btn_refreshA.png"];
     UIButton *btnLocation = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnLocation.frame = CGRectMake(13, 13, imgLocation.size.width, imgLocation.size.height);
+    btnLocation.frame = CGRectMake(0, 0, imgLocation.size.width, imgLocation.size.height);
     [btnLocation setImage:imgLocation forState:UIControlStateNormal];
     [btnLocation setImage:imgLocationHighlight forState:UIControlStateHighlighted];
     [btnLocation addTarget:self action:@selector(showLocation) forControlEvents:UIControlEventTouchUpInside];
     [imgNote addSubview:btnLocation];
     
-    UIImage *imgProfile = [UIImage imageNamed:@"btn_setting"];
-    UIImage *imgProfileHighlight = [UIImage imageNamed:@"btn_settingA"];
+    UIImage *imgProfile = [UIImage imageNamed:@"btn_setting.png"];
+    UIImage *imgProfileHighlight = [UIImage imageNamed:@"btn_settingA.png"];
     UIButton *btnProfile = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnProfile.frame = CGRectMake(imgNote.frame.size.width-32, 13, imgProfile.size.width, imgProfile.size.height);
+    btnProfile.frame = CGRectMake(imgNote.frame.size.width-imgProfile.size.width, 0, imgProfile.size.width, imgProfile.size.height);
     [btnProfile setImage:imgProfile forState:UIControlStateNormal];
     [btnProfile setImage:imgProfileHighlight forState:UIControlStateHighlighted];
     [btnProfile addTarget:self action:@selector(showProfile) forControlEvents:UIControlEventTouchUpInside];
@@ -403,10 +406,10 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
             
             Driver *driverInfo = ((FCDriverAnnotation *)annotation).driver;
             if (driverInfo.status.intValue == 0) {
-                customPinView.pinColor = BMKPinAnnotationColorRed;
+                customPinView.pinColor = BMKPinAnnotationColorGreen;
             }
             else {
-                customPinView.pinColor = BMKPinAnnotationColorGreen;
+                customPinView.pinColor = BMKPinAnnotationColorRed;
             }
             
             customPinView.animatesDrop = NO;
@@ -497,16 +500,18 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 
 /*
  
- 控制是否显示取消打车按钮
+  控制是否显示取消打车按钮
  
  */
 - (void)showCancelBtn:(BOOL)status{
     if (status) {
         if (!btnCancelRequest) {
             btnCancelRequest = [UIButton buttonWithType:UIButtonTypeCustom];
-            UIImage *img = [UIImage imageNamed:@"cancel_request"];
+            UIImage *img = [UIImage imageNamed:@"cancel_request.png"];
             [btnCancelRequest setBackgroundImage:img forState:UIControlStateNormal];
+            [btnCancelRequest setBackgroundImage:[UIImage imageNamed:@"cancel_requestA"] forState:UIControlStateHighlighted];
             [btnCancelRequest setTitle:@"取消叫车" forState:UIControlStateNormal];
+            [btnCancelRequest.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
             [btnCancelRequest setFrame:CGRectMake((imgToolbar.frame.size.width-img.size.width)/2.0, (imgToolbar.frame.size.height-img.size.height)/2.0, img.size.width, img.size.height)];
             [btnCancelRequest setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             [btnCancelRequest addTarget:self action:@selector(clickCancelRequestBtn) forControlEvents:UIControlEventTouchUpInside];
