@@ -574,6 +574,8 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     [self showCancelBtn:NO];
     [self showRequestView:NO];
     bubbleCanUse = YES;
+    _translucentView.hidden = YES;
+    _cancelView.hidden = YES;
 }
 
 - (void)continueCall
