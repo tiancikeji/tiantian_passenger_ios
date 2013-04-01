@@ -23,7 +23,7 @@
 
 - (void)loadContent{
     UIImageView *imgBg = [[UIImageView alloc] initWithFrame:self.bounds];
-    imgBg.image = [UIImage imageNamed:@"driver_info_panel"];
+    imgBg.image = [UIImage imageNamed:@"driver_info_panel.png"];
     [self addSubview:imgBg];
     
     UIImage *imgNormal = [UIImage imageNamed:@"phone_normal"];
@@ -31,23 +31,23 @@
     UIButton *btnCall = [UIButton buttonWithType:UIButtonTypeCustom];
     [btnCall setImage:imgNormal forState:UIControlStateNormal];
     [btnCall setImage:imgHiglight forState:UIControlStateHighlighted];
-    [btnCall setFrame:CGRectMake(220, 11, imgNormal.size.width, imgNormal.size.height)];
-    [btnCall addTarget:self action:@selector(clickCallBtn) forControlEvents:UIControlEventTouchUpInside];
+    [btnCall setFrame:CGRectMake(210, 20, imgNormal.size.width, imgNormal.size.height)];
+    [btnCall addTarget:self action:@selector(callDriver:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:btnCall];
     
     for (int i = 0; i < 2; i++) {
-        UILabel *labelTemp1 = [[UILabel alloc] initWithFrame:CGRectMake(40, 14+27*i, 170, 15)];
+        UILabel *labelTemp1 = [[UILabel alloc] initWithFrame:CGRectMake(40, 17+32*i, 170, 15)];
         labelTemp1.backgroundColor = [UIColor clearColor];
         labelTemp1.font = [UIFont systemFontOfSize:14];
         labelTemp1.textColor = [UIColor whiteColor];
         
-        UILabel *labelTemp2 = [[UILabel alloc] initWithFrame:CGRectMake(40+100*i, 84, 40, 15)];
+        UILabel *labelTemp2 = [[UILabel alloc] initWithFrame:CGRectMake(20+100*i, 82, 40, 15)];
         labelTemp2.backgroundColor = [UIColor clearColor];
         labelTemp2.font = [UIFont boldSystemFontOfSize:15];
-        labelTemp2.textAlignment = UITextAlignmentCenter;
+        labelTemp2.textAlignment = NSTextAlignmentCenter;
         labelTemp2.textColor = [UIColor whiteColor];
         
-        UILabel *labelTemp3 = [[UILabel alloc] initWithFrame:CGRectMake(80+100*i, 86, 80, 13)];
+        UILabel *labelTemp3 = [[UILabel alloc] initWithFrame:CGRectMake(50+100*i, 84, 80, 13)];
         labelTemp3.backgroundColor = [UIColor clearColor];
         labelTemp3.font = [UIFont systemFontOfSize:13];
         labelTemp3.textColor = [UIColor whiteColor];
@@ -68,20 +68,18 @@
     }
 }
 
-- (void)clickCallBtn{
-    
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"haveLogin"]) {
-        UIViewController *controller = [self viewController:self];
-        if ([controller isKindOfClass:[FCHomePageViewController class]]) {
-            [controller performSelector:@selector(showLoginPage)];
-        }
-        return;
-    }
-    
-    
-    NSString *number = [NSString stringWithFormat:@"telprompt://%@",driverInfo?driverInfo.mobile:@"88888888"];
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:number]];
-}
+//- (void)clickCallBtn{
+//    
+//    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"haveLogin"]) {
+//        UIViewController *controller = [self viewController:self];
+//        if ([controller isKindOfClass:[FCHomePageViewController class]]) {
+//            [controller performSelector:@selector(showLoginPage)];
+//        }
+//        return;
+//    }
+//    
+// 
+//}
 
 - (UIViewController*)viewController:(UIView *)vi {
     for (UIView* next = [vi superview]; next; next = next.superview) {
@@ -107,6 +105,20 @@
         labelTime.text = @"45";
     }
 }
+
+- (void)callDriver:(UIButton *)sender
+{
+    
+    NSString *number = [NSString stringWithFormat:@"telprompt://%@",driverInfo?driverInfo.mobile:@"88888888"];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:number]];
+//    NSURL *phoneURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel://13520690584"]];
+//    UIWebView *phoneCallWebView = [[UIWebView alloc] initWithFrame:CGRectZero];
+//    [phoneCallWebView loadRequest:[NSURLRequest requestWithURL:phoneURL]];
+//    NSURL *phoneURL = [NSURL URLWithString:[NSString stringWithFormat:@"tel://13520690584"]];
+//    UIWebView *phoneCallWebView = [[UIWebView alloc] initWithFrame:CGRectZero];
+//    [phoneCallWebView loadRequest:[NSURLRequest requestWithURL:phoneURL]];
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

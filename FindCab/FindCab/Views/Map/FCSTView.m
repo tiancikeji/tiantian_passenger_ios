@@ -10,7 +10,7 @@
 
 @implementation FCSTView
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame Starting:(BOOL)starting
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -18,12 +18,9 @@
         [self setAutoresizesSubviews:YES];
         [self setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
         
-        UIImage *add =[UIImage imageNamed:@"addressBg.png"];
-        UIImageView *addBg = [[UIImageView alloc] initWithImage:add];
-        [addBg setFrame:CGRectMake(10, 70, add.size.width, add.size.height)];
-        [self addSubview:addBg];
+        [self addTapGuesture];
         
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(20, 80, 280, 590) style:UITableViewStylePlain];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 80, 300, 400) style:UITableViewStylePlain];
         _tableView.backgroundView = nil;
         [_tableView setBackgroundColor:[UIColor clearColor]];
         [[self tableView] setAutoresizingMask:[self autoresizingMask]];
@@ -58,18 +55,33 @@
         _searchField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         [_searchField setDelegate:self];
         [_searchField becomeFirstResponder];
-        [_searchField setReturnKeyType:UIReturnKeyGo];
+        [_searchField setReturnKeyType:UIReturnKeySearch];
         [_searchField setFrame:CGRectMake(5, 0, searchBg.size.width-5, searchBg.size.height)];
         [_searchField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
         [view addSubview:_searchField];
-        
-        myPosition = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"my_location"]];
-        CGRect frame = myPosition.frame;
-        myPosition.frame = frame;
-        [myPosition setCenter:CGPointMake(4+frame.size.width/2, _searchField.frame.size.height/2)];
-        [_searchField addSubview:myPosition];
+        self.starting = starting;
+        if (starting) {
+            myPosition = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"my_location"]];
+            CGRect frame = myPosition.frame;
+            myPosition.frame = frame;
+            [myPosition setCenter:CGPointMake(4+frame.size.width/2, _searchField.frame.size.height/2)];
+            [_searchField addSubview:myPosition];
+        }
     }
     return self;
+}
+
+-(void)addTapGuesture
+{
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(confirmAction:)];
+    tapGesture.delegate = self;
+    [tapGesture setNumberOfTapsRequired:1];
+    [_searchField addGestureRecognizer:tapGesture];
+}
+
+-(void)confirmAction:(UITapGestureRecognizer *)gesture
+{
+    [_searchField becomeFirstResponder];
 }
 
 #pragma mark UITextFieldDelegate
@@ -89,22 +101,17 @@
 - (void)textFieldDidChange:(UITextField *)textField
 {
     /* 根据用户信息及输入地址 请求获取该地址相关地点信息 */
-    [myPosition removeFromSuperview];
-    [_delegate  loadAddress];
+    if (self.starting) {
+        [myPosition removeFromSuperview];
+    }
+    if (textField.markedTextRange == nil) {
+        [_delegate  loadAddress:textField.text];
+    }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"HISTORYARRAY"]) {
-        _historyArray = [[NSUserDefaults standardUserDefaults] objectForKey:@"HISTORYARRAY"];
-        [_historyArray removeLastObject];
-        AddressInfo *addre = [[AddressInfo alloc] init];
-        addre.placeName = textField.text;
-        [_historyArray addObject:addre];
-    }
-    
-    
     return YES;
 }
 

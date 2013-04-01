@@ -45,6 +45,7 @@ enum ConversationType{
 @property (nonatomic, strong) NSMutableArray *arrayReceiveDrivers;
 @property (nonatomic, strong) UIView *translucentView;
 @property (nonatomic, strong) CancelView *cancelView;
+@property (nonatomic, strong) NSString *myLocation;
 
 - (void)showWaitingPanel:(NSMutableArray *)array;
 

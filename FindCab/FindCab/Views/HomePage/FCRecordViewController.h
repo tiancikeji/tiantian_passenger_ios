@@ -35,7 +35,9 @@
 //    NSError *error;
 }
 @property (nonatomic, strong) Passenger *passenger;
-@property (nonatomic, assign) CLLocationCoordinate2D coorUser;
+@property (nonatomic) CLLocationCoordinate2D coorUser;
+@property (nonatomic) CLLocationCoordinate2D endLocation;
+@property (nonatomic) CLLocationCoordinate2D startLocation;
 
 /*
   存储用户输入的地点和终点信息

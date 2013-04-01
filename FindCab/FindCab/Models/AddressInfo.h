@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "BMapKit.h"
 
 @interface AddressInfo : NSObject
 
 @property (nonatomic, strong) NSString *placeName;
 @property (nonatomic, strong) NSString *detailAddress;
-
+@property (nonatomic) CLLocationCoordinate2D location;
 @end

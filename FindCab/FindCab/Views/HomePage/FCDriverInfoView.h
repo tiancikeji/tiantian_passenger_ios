@@ -12,6 +12,9 @@
 @interface FCDriverInfoView : UIView{
     UILabel *labelUserName,*labelDesription,*labelMiles,*labelTime;
 }
+
 @property (nonatomic, strong) Driver *driverInfo;
+
+- (void)callDriver:(UIButton *)sender;//呼叫司机
 
 @end

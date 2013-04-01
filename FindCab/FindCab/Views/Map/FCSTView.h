@@ -15,10 +15,10 @@
 @protocol FCSTViewDelegate <NSObject>
 
 - (void)cancelClicked;//点击取消
-- (void)loadAddress;
+- (void)loadAddress:(NSString *)searchLocation;
 @end
 
-@interface FCSTView : UIView<UITextFieldDelegate>
+@interface FCSTView : UIView<UITextFieldDelegate,UIGestureRecognizerDelegate>
 {
     UIImageView *myPosition;
 }
@@ -28,5 +28,8 @@
 @property (nonatomic,strong) UITextField *searchField;
 @property (nonatomic, unsafe_unretained) id <FCSTViewDelegate> delegate;
 @property (nonatomic, strong) NSMutableArray *historyArray;
+@property (nonatomic) BOOL starting;
 
+- (id)initWithFrame:(CGRect)frame Starting:(BOOL)starting;
+-(void)addTapGuesture;
 @end

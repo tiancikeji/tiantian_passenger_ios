@@ -54,11 +54,13 @@
     return self;
 }
 
+/* 继续叫车 */
 - (void)stillCall:(UIButton *)sender
 {
     [_delegate continueCall];
 }
 
+/* 确认取消 */
 - (void)sure:(UIButton *)sender
 {
     [_delegate cancelCall];

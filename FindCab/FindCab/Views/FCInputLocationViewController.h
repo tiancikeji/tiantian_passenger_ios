@@ -9,22 +9,29 @@
 #import <UIKit/UIKit.h>
 #import "FCSTView.h"
 #import "BMapKit.h"
+#import "AddressInfo.h"
 
 @protocol  FCInputLocationViewControllerDelegate;
 
-@interface FCInputLocationViewController : UIViewController<FCSTViewDelegate,BMKMapViewDelegate,BMKSearchDelegate>
+@interface FCInputLocationViewController : UIViewController<FCSTViewDelegate,BMKMapViewDelegate,BMKSearchDelegate,UIScrollViewDelegate>
 {
-
+    CLLocationCoordinate2D _userLocation;
+    NSMutableArray *_historyArray;
+    NSString *historyFile;
 }
 @property (nonatomic) BOOL starting;
 @property (nonatomic, unsafe_unretained) id <FCInputLocationViewControllerDelegate>delegate;
+@property (nonatomic, strong)  BMKSearch *search;
+@property (nonatomic, strong)  NSMutableArray *searchDatasource;
+@property (nonatomic) CLLocationCoordinate2D coorUser;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil starting:(BOOL)starting;
 
 @end
 
 @protocol FCInputLocationViewControllerDelegate <NSObject>
 
 - (void)inputLocationViewController:(FCInputLocationViewController *)controller
-                   selectedLocation:(NSString *)selectionMessage;
-
+                   selectedLocation:(NSString *)selectionMessage andLocation:(CLLocationCoordinate2D) location starting:(BOOL)starting;
 @end
 

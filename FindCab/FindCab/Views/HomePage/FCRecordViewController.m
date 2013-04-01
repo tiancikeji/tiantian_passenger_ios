@@ -182,6 +182,8 @@
         [button setTag:TFTag+i];
         if (i == 0) {
             textStart = button;
+            [textStart.titleLabel setFont:[UIFont systemFontOfSize:15]];
+            [textStart setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             /* 消除文字 新需求无 */
 //            btnClear = [UIButton buttonWithType:UIButtonTypeCustom];
 //            UIImage *imgIcon = [UIImage imageNamed:@"icon_delete2"];
@@ -302,13 +304,14 @@
 
 - (void)intoLocation:(UIButton *)sender
 {
-    FCInputLocationViewController *inputLocation = [[FCInputLocationViewController alloc] initWithNibName:@"InputLocationViewController" bundle:nil];
-    inputLocation.delegate = self;
-    if (sender.tag==TFTag) {
-        inputLocation.starting = YES;
+    FCInputLocationViewController *inputLocation;
+    if (sender.tag == TFTag) {
+        inputLocation = [[FCInputLocationViewController alloc] initWithNibName:nil bundle:nil starting:YES];
     }else{
-        inputLocation.starting = NO;
+       inputLocation = [[FCInputLocationViewController alloc] initWithNibName:nil bundle:nil starting:NO];
     }
+    inputLocation.delegate = self;
+    inputLocation.coorUser = self.coorUser;
     [self presentModalViewController:inputLocation animated:YES];
 
 }
@@ -550,10 +553,25 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark
+#pragma mark FCInputLocationViewControllerDelegate Methods
+
 - (void)inputLocationViewController:(FCInputLocationViewController *)controller
-                   selectedLocation:(NSString *)selectionMessage
+                   selectedLocation:(NSString *)selectionMessage andLocation:(CLLocationCoordinate2D)location starting:(BOOL)starting
 {
-    NSLog(@"%@", selectionMessage);
+    if (!selectionMessage || ![selectionMessage isEqualToString:@""]) {
+        if (starting) {
+            self.startLocation = location;
+            isUserLocation = NO;
+            [imgLocation removeFromSuperview];
+            [textStart setTitle:selectionMessage forState:UIControlStateNormal];
+        }else{
+            self.endLocation = location;
+            [textEnd setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [textEnd.titleLabel setFont:[UIFont systemFontOfSize:15]];
+            [textEnd setTitle:selectionMessage forState:UIControlStateNormal];
+        }
+    }
 }
 
 @end

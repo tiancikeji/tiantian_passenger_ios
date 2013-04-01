@@ -62,6 +62,8 @@
     
     locationManager = [[CLLocationManager alloc] init];
     [locationManager setDelegate:self];
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    locationManager.distanceFilter = kCLDistanceFilterNone;
     [locationManager startUpdatingLocation];
     
 //    coorUser = myMapView.userLocation.coordinate;
@@ -70,6 +72,20 @@
     [self loadNoteView];//加载
     [self loadToolBar];
     
+    AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    if (![app isConnectionAvailable]  ) {
+        [FCHUD showErrorWithStatus:@"请你连接网络"];
+    }else{
+        [FCHUD showWithStatus:@"正在加载"];
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveLogin"]) {
+            passenger = [[Passenger alloc] init];
+            passenger.uid = [[NSUserDefaults standardUserDefaults] objectForKey:@"uid"];
+        }
+        
+        [self getDrivers];
+    }
+    [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(getDrivers) userInfo:nil repeats:YES];
 //    UIButton *btnLocation = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 //    [btnLocation setFrame:CGRectMake(10, self.view.frame.size.height-self.navigationController.navigationBar.frame.size.height-40, 80, 30)];
 //    [btnLocation setTitle:@"定位" forState:UIControlStateNormal];
@@ -86,16 +102,7 @@
 //    [myMapView addAnnotation:annotation];
     
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveLogin"]) {
-        passenger = [[Passenger alloc] init];
-        passenger.uid = [[NSUserDefaults standardUserDefaults] objectForKey:@"uid"];
-    }
-    
-    
-    [FCHUD showWithStatus:@"正在加载"];
-    [self getDrivers];
 
-    [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(getDrivers) userInfo:nil repeats:YES];
     //[self showDriverContent:YES];
 	// Do any additional setup after loading the view.
 }
@@ -401,7 +408,6 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     newRegion.span.latitudeDelta = 0.03;
     newRegion.span.longitudeDelta = 0.03;
     [myMapView setRegion:newRegion];
-    [locationManager stopUpdatingLocation];
 }
 
 - (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation{
@@ -431,6 +437,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)aView {
     id<BMKAnnotation> annotation = aView.annotation;
+    BMKPointAnnotation *userAnnotation = aView.annotation;
     if (!annotation || ![aView isSelected])
         return;
     
@@ -439,8 +446,41 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     }
     if ([annotation isKindOfClass:[FCDriverAnnotation class]]) {
         [self showDriverInfo:((FCDriverAnnotation *)annotation).driver];
+    }else{
+        [userAnnotation setTitle:_myLocation];
     }
+}
 
+#pragma mark
+#pragma mark CLLocationManagerDelegate Methods
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    [geocoder reverseGeocodeLocation: newLocation completionHandler:^(NSArray *array, NSError *error) {
+        if (array.count > 0) {
+            CLPlacemark *placemark = [array objectAtIndex:0];
+            NSString *detail =placemark.thoroughfare;
+            NSString *cityName =placemark.locality;
+            NSString *name = placemark.name;
+//            NSString *thoroughFare = placemark.thoroughfare;
+            NSString *subThoroughFare = placemark.subThoroughfare;
+//            NSLog(@"%@,%@,%@",cityName,subThoroughFare,placemark.subLocality);
+            if ([cityName isEqualToString:@"(null)"] || [cityName isEqualToString:@""]|| cityName == nil) {
+                cityName = @"";
+            }
+            if ([detail isEqualToString:@"(null)"] || [detail isEqualToString:@""] ||detail== nil) {
+                detail = @"";
+            }
+            if ([name isEqualToString:@"(null)"] || [name isEqualToString:@""]|| name == nil) {
+                name = @"";
+            }
+            if ([subThoroughFare isEqualToString:@"(null)"] || [subThoroughFare isEqualToString:@""] ||subThoroughFare == nil) {
+                detail = @"";
+            }
+            _myLocation = [NSString stringWithFormat:@"%@%@%@",cityName,detail,subThoroughFare];
+        }
+    }];
 }
 
 - (void)showDriverInfo:(Driver *)driverInfo{
