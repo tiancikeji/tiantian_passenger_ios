@@ -35,6 +35,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     [self  createNaviBar];
     [self setStrNaviTitle:@"手机验证"];
     self.navigationController.navigationBarHidden = YES;
@@ -95,7 +96,7 @@
     _vertifiCodeField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _vertifiCodeField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _vertifiCodeField.font = [UIFont systemFontOfSize:13];
-    _vertifiCodeField.keyboardType = UIKeyboardAppearanceDefault;
+    _vertifiCodeField.keyboardType = UIKeyboardTypeNumberPad;
     _vertifiCodeField.placeholder = @"请输入验证码";
     [self.view addSubview:_vertifiCodeField];
     
@@ -135,21 +136,18 @@
     if (!self.vertifiCodeField.text || self.vertifiCodeField.text.length==0) {
         [FCHUD showErrorWithStatus:@"验证码不能为空"];
         [self.vertifiCodeField becomeFirstResponder];
+        return;
     }
-    [self intoMap:[NSNumber numberWithInt:2] haveLogin:YES];
-    
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"HAVELOGIN"]) {
-        [self intoMap:[[NSUserDefaults standardUserDefaults] objectForKey:@"uid"] haveLogin:YES];
-    }
+//    [self intoMap:[NSNumber numberWithInt:2] haveLogin:YES];
 
-//    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//    NSString *deviceUID = appDelegate.strDeviceToken;
-//    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"haha",@"name",phoneNumber,@"mobile",verfifyCode,@"password",deviceUID,@"iosDevice",nil];
-//    FCServiceResponse *response = [[FCServiceResponse alloc] init];
-//    [response setDelegate:self];
-//    response.strUrl = SUBMITCODE;
-//    response.type = POST;
-//    [response startQueryAndParse:[NSMutableDictionary dictionaryWithObject:dict forKey:@"passenger"]];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSString *deviceUID = appDelegate.strDeviceToken;
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"haha",@"name",phoneNumber,@"mobile",verfifyCode,@"password",deviceUID,@"iosDevice",nil];
+    FCServiceResponse *response = [[FCServiceResponse alloc] init];
+    [response setDelegate:self];
+    response.strUrl = SUBMITCODE;
+    response.type = POST;
+    [response startQueryAndParse:[NSMutableDictionary dictionaryWithObject:dict forKey:@"passenger"]];
 }
 
 - (void)intoMap:(NSNumber *)userID haveLogin:(BOOL)login

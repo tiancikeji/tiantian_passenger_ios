@@ -20,6 +20,7 @@
 }
 
 @property(nonatomic,unsafe_unretained) id<CancelViewDelegate> delegate;
+@property(nonatomic,strong) UIView *translucentView;
 
 - (void)sure:(UIButton *)sender;
 - (void)stillCall:(UIButton *)sender;

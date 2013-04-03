@@ -8,12 +8,13 @@
 
 #import "FCInputLocationViewController.h"
 
+#define listNumber 9
 static NSString *const STCellIdentifier = @"STCell";
 
 @interface FCInputLocationViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     FCSTView *_customView;
-    NSArray *_datasource;
+    NSMutableArray *_datasource;
     BMKMapView *_map;
 }
 @end
@@ -28,12 +29,6 @@ static NSString *const STCellIdentifier = @"STCell";
         self.starting = starting;
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"allBg.png"]]];
         //        [[self navigationItem] setTitle:@"Search Display Controller!"];
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *docPath = [paths objectAtIndex:0];
-        historyFile = [docPath stringByAppendingPathComponent:@"history.plist"];
-        _datasource = [[NSArray alloc] initWithContentsOfFile:historyFile];
-//        _datasource = @[@"Apple", @"Banana", @"Orange", @"Grape"];
-//        _searchDatasource = n
     }
     return self;
 }
@@ -44,6 +39,33 @@ static NSString *const STCellIdentifier = @"STCell";
     _customView = view;
     [_customView setDelegate:self];
     [self setView:view];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docPath = [paths objectAtIndex:0];
+    historyFile = [docPath stringByAppendingPathComponent:@"history.plist"];
+    NSArray *history = [[NSArray alloc] initWithContentsOfFile:historyFile];
+    _historyArray = [NSMutableArray arrayWithCapacity:10];
+    
+    //起点 列表默认第一行是我的位置 
+    if (_starting) {
+        AddressInfo *info = [[AddressInfo alloc] init];
+        info.placeName = @"我的位置";
+        info.location = _userLocation;
+        [_historyArray addObject:info];
+    }
+    
+    for (int i = 0; i<history.count; i++) {
+        NSMutableDictionary *dic = [history objectAtIndex:i];
+        AddressInfo *info = [[AddressInfo alloc] init];
+        info.placeName = [dic valueForKey:@"placeName"];
+        info.detailAddress = [dic valueForKey:@"detailAddress"];
+        CLLocationCoordinate2D location;
+        location.latitude = [[dic valueForKey:@"latitude"]doubleValue];
+        location.longitude = [[dic valueForKey:@"longitude"]doubleValue];
+        NSLog(@"%@,%@,%f,%f",[dic valueForKey:@"placeName"],[dic valueForKey:@"detailAddress"],[[dic valueForKey:@"latitude"]doubleValue],[[dic valueForKey:@"longitude"]doubleValue]);
+        info.location = location;
+        [_historyArray addObject:info];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -55,9 +77,6 @@ static NSString *const STCellIdentifier = @"STCell";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    _map = [[BMKMapView alloc] init];
-//    [_map setDelegate:self];
-//    [_map setShowsUserLocation:YES];
     
     _search = [[BMKSearch alloc] init];
     [_search setDelegate:self];
@@ -75,27 +94,6 @@ static NSString *const STCellIdentifier = @"STCell";
 //    }
 	// Do any additional setup after loading the view.
 }
-
-#pragma mark 
-#pragma mark BMKMapViewDelegate Methods
-//
-//- (void)mapViewWillStartLocatingUser:(BMKMapView *)mapView
-//{
-//    _userLocation = mapView.userLocation.coordinate;
-//    NSLog(@"%f,%f",_userLocation.latitude,_userLocation.longitude);
-//
-//}
-//
-//- (void)mapView:(BMKMapView *)mapView didUpdateUserLocation:(BMKUserLocation *)userLocation
-//{
-//    _userLocation = userLocation.coordinate;
-//    NSLog(@"%f,%f",_userLocation.latitude,_userLocation.longitude);
-//}
-//
-//-(void)mapView:(BMKMapView *)mapView didFailToLocateUserWithError:(NSError *)error{
-//    
-//    NSLog(@"定位错误%@",error);
-//}
 
 #pragma mark - STViewDelegate Methods
 
@@ -139,7 +137,7 @@ static NSString *const STCellIdentifier = @"STCell";
 {
 //    NSArray *datasouce = [tableView isEqual:[_customView tableView]] ? _datasource : _searchDatasource;
   NSArray *  datasouce = (![_searchDatasource count])?_datasource:_searchDatasource;
-    return 10;
+    return listNumber;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -155,30 +153,32 @@ static NSString *const STCellIdentifier = @"STCell";
     }
     if (indexPath.row == 0) {
         cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cellBgTop.png"]];
-    }else if(indexPath.row == 9)
+    }else if(indexPath.row == listNumber-1)
     {
         cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cellBgLow.png"]];
     }else{
         cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cellBg.png"]];
     }
-    
-    if ([_searchDatasource count]<=indexPath.row) {
-        
-    }else{
-        if ([_searchDatasource count]>0) {
+
+    if ([_searchDatasource count]>0) {
+        if ([_searchDatasource count]<=indexPath.row) {
+            [cell.textLabel setText:@""];
+            [cell.detailTextLabel setText:@""];
+        }else{
             AddressInfo *info = [_searchDatasource objectAtIndex:indexPath.row];
             [cell.textLabel setText:info.placeName];
             [cell.detailTextLabel setText:info.detailAddress];
+        }
+    }else{
+        if ([_historyArray count]<= indexPath.row) {
+            [cell.textLabel setText:@""];
+            [cell.detailTextLabel setText:@""];
         }else{
             AddressInfo *info = [_historyArray objectAtIndex:indexPath.row];
             [[cell textLabel] setText:info.placeName];
             [cell.detailTextLabel setText:info.detailAddress];
         }
-        if (indexPath.row>=10) {
-            return nil;
-        }
     }
-
     return cell;
 }
 
@@ -191,32 +191,40 @@ static NSString *const STCellIdentifier = @"STCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([_searchDatasource count]<=indexPath.row) {
+    AddressInfo *info;
+    if ([_searchDatasource count] && [_searchDatasource count]>indexPath.row) {
+        info = [_searchDatasource objectAtIndex:indexPath.row];
+    }else if([_historyArray count]>indexPath.row){
+        info = [_historyArray objectAtIndex:indexPath.row];
+    }
+    if (info) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithObjectsAndKeys:info.placeName,@"placeName",info.detailAddress,@"detailAddress",[NSString stringWithFormat:@"%f",info.location.latitude],@"latitude",[NSString stringWithFormat:@"%f",info.location.longitude],@"longitude", nil];
         
-    }else{
-        AddressInfo *info = [_searchDatasource objectAtIndex:indexPath.row];
         NSString *selectedPlace = info.placeName;
-        
         if ([self.delegate respondsToSelector:@selector(inputLocationViewController:selectedLocation:andLocation:starting:)]) {
             [_delegate inputLocationViewController:self selectedLocation:selectedPlace andLocation:info.location starting:self.starting];
         }
-        
-        if (_historyArray) {
-            if ([_historyArray count]==10) {
-                [_historyArray removeLastObject];
-            }
+        if ([info.placeName isEqualToString:@"我的位置"]) {
             
-            [_historyArray addObject:info];
-            
-            [_historyArray writeToFile:historyFile atomically:YES];
         }else{
-            _historyArray = [NSMutableArray arrayWithCapacity:10];
-            //操作完若修改了数据则，写入文件
-            [_historyArray addObject:info];
-            [_historyArray writeToFile:historyFile atomically:YES];
+            NSMutableArray *history = [[NSMutableArray alloc] initWithContentsOfFile:historyFile];
+            if (history) {
+                if (![history containsObject:dic]) {
+                    if ([history count]==listNumber) {
+                        [history removeLastObject];
+                    }
+                    [history insertObject:dic atIndex:0];
+                    [history writeToFile:historyFile atomically:YES];
+                }
+            }else{
+                history = [NSMutableArray arrayWithCapacity:10];
+                //操作完若修改了数据则，写入文件
+                [history addObject:dic];
+                [history writeToFile:historyFile atomically:YES];
+            }
         }
-        [self dismissModalViewControllerAnimated:YES];
     }
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark

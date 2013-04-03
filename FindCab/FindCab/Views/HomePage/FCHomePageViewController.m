@@ -53,7 +53,7 @@
 {
     [super viewDidLoad];
     
-    bubbleCanUse = YES;
+    bubbleCanUse = NO;
     
     myMapView = [[BMKMapView alloc] initWithFrame:self.view.bounds];
     myMapView.delegate = self;
@@ -82,10 +82,12 @@
             passenger = [[Passenger alloc] init];
             passenger.uid = [[NSUserDefaults standardUserDefaults] objectForKey:@"uid"];
         }
-        
         [self getDrivers];
     }
-    [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(getDrivers) userInfo:nil repeats:YES];
+    [self performSelector:@selector(showLocation) withObject:nil afterDelay:5];
+//    [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(getDrivers) userInfo:nil repeats:YES];
+
+//    [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(getDrivers) userInfo:nil repeats:YES
 //    UIButton *btnLocation = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 //    [btnLocation setFrame:CGRectMake(10, self.view.frame.size.height-self.navigationController.navigationBar.frame.size.height-40, 80, 30)];
 //    [btnLocation setTitle:@"定位" forState:UIControlStateNormal];
@@ -105,6 +107,24 @@
 
     //[self showDriverContent:YES];
 	// Do any additional setup after loading the view.
+}
+
+//添加用户位置标注点
+- (void)adUserAnnotation
+{
+//    if (_userAnnotation) {
+//        [myMapView removeAnnotation:_userAnnotation];
+//    }
+//    _userAnnotation=[[UserAnnotation alloc] initWithLatitude:coorUser.latitude andLongitude:coorUser.longitude andTitle:_myLocation];
+//    [myMapView   addAnnotation:_userAnnotation];
+    if (_userAnnotation) {
+        [myMapView removeAnnotation:_userAnnotation];
+    }else{
+        _userAnnotation = [[BMKPointAnnotation alloc] init];
+    }
+    [_userAnnotation setTitle:_myLocation];
+    [_userAnnotation setCoordinate:coorUser];
+    [myMapView addAnnotation:_userAnnotation];
 }
 
 /*
@@ -361,8 +381,10 @@
 - (void)showLocation{
     [locationManager startUpdatingLocation];
     [myMapView setShowsUserLocation:YES];
-    newRegion.center = coorUser;
-    [myMapView setRegion:newRegion];
+    
+//    newRegion.center = coorUser;
+//    [myMapView setRegion:newRegion];
+//    [self adUserAnnotation];
 }
 
 NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
@@ -373,13 +395,10 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
  
  */
 - (void)clickCallBtn{
-//    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"haveLogin"]) {
-//        [self showLoginPage];
-//        return;
-//    }
     FCRecordViewController *recordController = [[FCRecordViewController alloc] init];
     recordController.passenger = passenger;
     recordController.coorUser = coorUser;
+    recordController.myLocationName = _myLocation;
     [self.navigationController pushViewController:recordController animated:YES];
     [recordController performSelector:@selector(setMainContent:) withObject:self];
 }
@@ -387,6 +406,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 //click cancel/oncar btn
 - (void)clickToolBarBtn:(id)sender{
     int tag = ((UIButton *)sender).tag;
+    bubbleCanUse = NO;
     [self updateConversations:tag==0?ConversationTypeRefuse:ConversationTypeAccept];
     [self showCallBtn:YES];
     [self showDriverContent:NO];
@@ -408,46 +428,69 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     newRegion.span.latitudeDelta = 0.03;
     newRegion.span.longitudeDelta = 0.03;
     [myMapView setRegion:newRegion];
+    [myMapView setShowsUserLocation:NO];
 }
 
 - (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation{
     if ([annotation isKindOfClass:[FCDriverAnnotation class]]){
         static NSString *annotationIdentifier = @"AnnotationIdentifier";
-        BMKPinAnnotationView *pinView = (BMKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:annotationIdentifier];
+        BMKAnnotationView *pinView = (BMKAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:annotationIdentifier];
         if (!pinView) {
-            BMKPinAnnotationView* customPinView = [[BMKPinAnnotationView alloc]
+            BMKAnnotationView* customPinView = [[BMKAnnotationView alloc]
                                                    initWithAnnotation:annotation reuseIdentifier:annotationIdentifier];
             
             Driver *driverInfo = ((FCDriverAnnotation *)annotation).driver;
             if (driverInfo.status.intValue == 0) {
-                customPinView.pinColor = BMKPinAnnotationColorGreen;
+                customPinView.image = [UIImage imageNamed:@"green.png"];
             }
             else {
-                customPinView.pinColor = BMKPinAnnotationColorRed;
+                customPinView.image = [UIImage imageNamed:@"orange.png"];
             }
             
-            customPinView.animatesDrop = NO;
+//            customPinView.animatesDrop = NO;
             customPinView.canShowCallout = NO;
             return customPinView;
+        }else{
+            pinView.annotation = annotation;
         }
+       return pinView;
+
     }
+    else if([annotation isKindOfClass:[BMKPointAnnotation class]]){
+        static NSString *annotationIdentifier = @"UserAnnotationIdentifier";
+        BMKPinAnnotationView* pinView = (BMKPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:annotationIdentifier];
+        if (!pinView) {
+            BMKPinAnnotationView *userPinView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationIdentifier];
+            userPinView.image = [UIImage imageNamed:@"user.png"];
+            userPinView.canShowCallout = YES;
+            return userPinView;
+        }else{
+            pinView.annotation = annotation;
+        }
+        return pinView;
+    }
+
     return nil;
 }
 
 
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)aView {
     id<BMKAnnotation> annotation = aView.annotation;
-    BMKPointAnnotation *userAnnotation = aView.annotation;
+//    BMKPointAnnotation *userAnnotation = (BMKPointAnnotation *)annotation;
     if (!annotation || ![aView isSelected])
         return;
     
     if (!bubbleCanUse) {
+        if ([annotation isKindOfClass:[FCDriverAnnotation class]]) {
+        }else if ([annotation isKindOfClass:[BMKPointAnnotation class]]){
+            NSLog(@"BMKPointAnnotation");
+        }
         return;
     }
     if ([annotation isKindOfClass:[FCDriverAnnotation class]]) {
         [self showDriverInfo:((FCDriverAnnotation *)annotation).driver];
-    }else{
-        [userAnnotation setTitle:_myLocation];
+    }else if ([annotation isKindOfClass:[BMKPointAnnotation class]]){
+
     }
 }
 
@@ -465,22 +508,33 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
             NSString *name = placemark.name;
 //            NSString *thoroughFare = placemark.thoroughfare;
             NSString *subThoroughFare = placemark.subThoroughfare;
-//            NSLog(@"%@,%@,%@",cityName,subThoroughFare,placemark.subLocality);
-            if ([cityName isEqualToString:@"(null)"] || [cityName isEqualToString:@""]|| cityName == nil) {
-                cityName = @"";
+            if (cityName == NULL || [cityName isEqualToString:@""]|| cityName == nil) {
+            }else{
+                myCityName = cityName;
             }
-            if ([detail isEqualToString:@"(null)"] || [detail isEqualToString:@""] ||detail== nil) {
-                detail = @"";
+            if ((detail == NULL) || [detail isEqualToString:@""] ||detail== nil) {
+            }else{
+                myDetailAddress = detail;
             }
-            if ([name isEqualToString:@"(null)"] || [name isEqualToString:@""]|| name == nil) {
-                name = @"";
+            if (name == NULL || [name isEqualToString:@""]|| name == nil) {
+            }else{
+                myLocationName = name;
             }
-            if ([subThoroughFare isEqualToString:@"(null)"] || [subThoroughFare isEqualToString:@""] ||subThoroughFare == nil) {
-                detail = @"";
+            if (subThoroughFare == NULL || [subThoroughFare isEqualToString:@""] ||subThoroughFare == nil) {
+            }else{
+                mySubAddress = subThoroughFare;
             }
-            _myLocation = [NSString stringWithFormat:@"%@%@%@",cityName,detail,subThoroughFare];
         }
     }];
+    NSLog(@"%@,%@,%@,%@",myCityName,myDetailAddress,myLocationName,mySubAddress);
+
+    _myLocation = [NSString stringWithFormat:@"%@%@%@",myCityName,myDetailAddress,mySubAddress];
+    [self adUserAnnotation];
+    [locationManager stopUpdatingLocation];
+//    [_userAnnotation setTitle:_myLocation];
+
+//    if (_myLocation) {
+//    }
 }
 
 - (void)showDriverInfo:(Driver *)driverInfo{
@@ -611,12 +665,24 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 
 - (void)cancelCall
 {
-    [NSThread cancelPreviousPerformRequestsWithTarget:self selector:@selector(getMyTripConversations) object:nil];
-    [self showCancelBtn:NO];
-    [self showRequestView:NO];
-    bubbleCanUse = YES;
-    _translucentView.hidden = YES;
-    _cancelView.hidden = YES;
+    if (waitingRequestView.hidden == NO) {
+        [NSThread cancelPreviousPerformRequestsWithTarget:self selector:@selector(getMyTripConversations) object:nil];
+        [self showCancelBtn:NO];
+        [self showRequestView:NO];
+        bubbleCanUse = YES;
+        _translucentView.hidden = YES;
+        _cancelView.hidden = YES;
+    }else{
+        bubbleCanUse = YES;
+        [self updateConversations:ConversationTypeRefuse];
+        [self showCallBtn:YES];
+        [self showCancelBtn:NO];
+        [self showDriverContent:NO];
+        imgNote.hidden = NO;
+        _translucentView.hidden = YES;
+        _cancelView.hidden = YES;
+    }
+
 }
 
 - (void)continueCall
@@ -642,7 +708,6 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 }
 
 - (void)showAnswerCar{
-    [self showCallBtn:NO];
     [self showDriverContent:YES];
     imgNote.hidden = YES;
 }
@@ -668,6 +733,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     [conversationRequest setDelegate:self];
 }
 
+//获取司机应答信息 每十秒获取一次
 - (void)getMyTripConversations{
     [self performSelector:@selector(getMyTripConversations) withObject:nil afterDelay:CONVERSATION_REFRESH_TIME];
     
@@ -678,6 +744,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     [conversationRequest getConversation:converID];
 }
 
+/* 获取回话成功 获取应答的司机信息 */
 - (void)getConversationFinished:(NSMutableArray *)array{
     if (array.count==0) {
         return;
@@ -686,11 +753,10 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     converID = conversation._id;
     if (conversation.status.intValue == 1) {
         [self showAnswerCar];
-        
-        [self showCancelBtn:NO];
+        [self showCancelBtn:YES];
         [self showRequestView:NO];
         imgNote.hidden = YES;
-        [self showCallBtn:NO];
+//        [self showCallBtn:NO];//显示“取消上车” “已经上车”
         
         for (int i = 0; i < arrayReceiveDrivers.count; i++) {
             Driver *dri = [arrayReceiveDrivers objectAtIndex:i];

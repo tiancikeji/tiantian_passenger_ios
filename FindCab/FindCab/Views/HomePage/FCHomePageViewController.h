@@ -13,6 +13,7 @@
 #import "FCWaitingRequestView.h"
 #import "FCServiceResponse.h"
 #import "CancelView.h"
+#import "UserAnnotation.h"
 
 @class FCConversationRequest;
 
@@ -39,7 +40,13 @@ enum ConversationType{
     BOOL bubbleCanUse;
     BMKCoordinateRegion newRegion;//存储当前用户位置及5公司范围
     BMKCoordinateRegion userRegion;//存储当前地图的显示范围
+    NSString *myCityName;
+    NSString *myDetailAddress;
+    NSString *myLocationName;
+    NSString *mySubAddress;
 }
+
+@property (nonatomic, strong) BMKPointAnnotation *userAnnotation;
 @property (nonatomic, strong) NSNumber *converID,*tripID;
 @property (nonatomic, strong) Passenger *passenger;
 @property (nonatomic, strong) NSMutableArray *arrayReceiveDrivers;
@@ -48,5 +55,6 @@ enum ConversationType{
 @property (nonatomic, strong) NSString *myLocation;
 
 - (void)showWaitingPanel:(NSMutableArray *)array;
+- (void)adUserAnnotation;
 
 @end

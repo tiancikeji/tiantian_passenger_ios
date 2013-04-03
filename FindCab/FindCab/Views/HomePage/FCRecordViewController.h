@@ -38,11 +38,16 @@
 @property (nonatomic) CLLocationCoordinate2D coorUser;
 @property (nonatomic) CLLocationCoordinate2D endLocation;
 @property (nonatomic) CLLocationCoordinate2D startLocation;
+@property (nonatomic, strong) UIButton *price1;
+@property (nonatomic, strong) UIButton *price2;
+@property (nonatomic, strong) UIButton *price3;
+@property (nonatomic, strong) UIButton *price4;
+@property (nonatomic, strong) UIButton *price5;
+@property (nonatomic) int price;
 
 /*
   存储用户输入的地点和终点信息
  */
-@property (nonatomic, strong) AddressInfo *starting;
-@property (nonatomic, strong) AddressInfo *ending;
+@property (nonatomic, strong) NSString *myLocationName;
 
 @end

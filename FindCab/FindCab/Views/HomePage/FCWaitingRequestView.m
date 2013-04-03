@@ -66,7 +66,7 @@
         label.font = [UIFont systemFontOfSize:15];
         if (i == 0) {
             labelCount = label;
-            label.text = @"共有133辆出租车收到消息";
+            label.text = @"共有0辆出租车收到消息";
         }
         else {
             label.text = @"请等待司机应答⋯⋯";

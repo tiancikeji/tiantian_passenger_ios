@@ -41,13 +41,13 @@
         labelTemp1.font = [UIFont systemFontOfSize:14];
         labelTemp1.textColor = [UIColor whiteColor];
         
-        UILabel *labelTemp2 = [[UILabel alloc] initWithFrame:CGRectMake(20+100*i, 82, 40, 15)];
+        UILabel *labelTemp2 = [[UILabel alloc] initWithFrame:CGRectMake(20+100*i, 82, 80, 15)];
         labelTemp2.backgroundColor = [UIColor clearColor];
         labelTemp2.font = [UIFont boldSystemFontOfSize:15];
         labelTemp2.textAlignment = NSTextAlignmentCenter;
         labelTemp2.textColor = [UIColor whiteColor];
         
-        UILabel *labelTemp3 = [[UILabel alloc] initWithFrame:CGRectMake(50+100*i, 84, 80, 13)];
+        UILabel *labelTemp3 = [[UILabel alloc] initWithFrame:CGRectMake(60+100*i, 84, 40, 13)];
         labelTemp3.backgroundColor = [UIColor clearColor];
         labelTemp3.font = [UIFont systemFontOfSize:13];
         labelTemp3.textColor = [UIColor whiteColor];
@@ -55,12 +55,12 @@
         if (i==0) {
             labelUserName = labelTemp1;
             labelMiles = labelTemp2;
-            labelTemp3.text = @"公里";
+            labelTemp3.text = @"";
         }
         else {
             labelDesription = labelTemp1;
             labelTime = labelTemp2;
-            labelTemp3.text = @"分钟";
+            labelTemp3.text = @"";
         }
         [self addSubview:labelTemp1];
         [self addSubview:labelTemp2];
@@ -93,10 +93,11 @@
 
 - (void)updateUserInfo{
     if (driverInfo) {
-        labelUserName.text = driverInfo.name;
+        labelUserName.text = [NSString stringWithFormat:@"%@已应答",driverInfo.name];
         labelDesription.text = [NSString stringWithFormat:@"%@,%@",driverInfo.car_type,driverInfo.car_license];//@"南汽,京C44438";
-        labelMiles.text = @"03";
-        labelTime.text = @"45";
+        float distance =  [driverInfo.distance floatValue];
+        labelMiles.text = [NSString stringWithFormat:@"%.2f公里",distance];
+        labelTime.text = @"45分钟";
     }
     else {
         labelUserName.text = @"张师傅已应答";

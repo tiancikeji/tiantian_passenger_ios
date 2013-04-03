@@ -15,11 +15,9 @@
 @interface FCRecordViewController ()
 
 - (void)selectPrice:(UIButton *)sender;//选择加价
-- (void)refreshStarting;//刷新起点文字
-- (void)refreshEnding;//刷新终点文字
 //- (void)keyboardWillShow:(NSNotification *)notify;
 - (void)intoLocation:(UIButton *)sender;//进入叫车地点输入界面
-
+- (void)startIsUserLocation;//用户起点选择我的位置
 @end
 
 @implementation FCRecordViewController
@@ -86,14 +84,6 @@
     [btnNaviRight addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     
     [self loadContent];
-    
-    /* 通知中心 */
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshStarting:) name:@"REFRESHSTARTING" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshEnding:) name:@"REFRESHENDING" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(keyboardWillShow:)
-//                                                 name:UIKeyboardWillShowNotification
-//                                               object:nil];
     
     // get initalization parameters
     // 获得初始化参数，
@@ -216,6 +206,7 @@
         [self.view addSubview:button];
     }
 
+    _price = 0;
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(35, 200, 40,50)];
     [label setText:@"加价:"];
     [label setFont:[UIFont systemFontOfSize:15]];
@@ -274,31 +265,12 @@
 - (void)selectPrice:(UIButton *)sender
 {
     sender.selected = YES;
+    _price = sender.tag-PRICETAG;
     for (int i= PRICETAG; i<PRICETAG+5; i++) {
         if (i!=sender.tag) {
             UIButton *btn = (UIButton *)[self.view viewWithTag:i];
             btn.selected = NO;
         }
-    }
-}
-
-/*
-  起点赋值
- */
-- (void)refreshStarting
-{
-    if (!_starting) {
-        
-    }
-}
-
-/*
-  终点信息赋值
- */
-- (void)refreshEnding
-{
-    if (!_ending) {
-        
     }
 }
 
@@ -384,7 +356,7 @@
         [myAlertView show];
         return;
     }
-    if (textEnd.titleLabel.text.length == 0) {
+    if (textEnd.titleLabel.text.length == 0 || [textEnd.titleLabel.text isEqualToString:@"请输入目的地"]) {
         UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:nil message:@"请输入目的地" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [myAlertView show];
         return;
@@ -401,26 +373,16 @@
     NSDictionary *dict;
     if (isUserLocation) {
         dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                [NSString stringWithFormat:@"%@",passenger.uid],@"passenger_id", [NSString stringWithFormat:@"%f",coorUser.latitude],@"start_lat",[NSString stringWithFormat:@"%f",coorUser.longitude],@"start_lng",
-                textEnd.titleLabel.text,@"end",@"19:00",@"appointment",nil];
+                [NSString stringWithFormat:@"%@",passenger.uid],@"passenger_id", self.myLocationName,@"start",[NSString stringWithFormat:@"%f",coorUser.latitude],@"start_lat",[NSString stringWithFormat:@"%f",coorUser.longitude],@"start_lng",
+                textEnd.titleLabel.text,@"end",[NSString stringWithFormat:@"%f",_endLocation.latitude],@"end_lat",[NSString stringWithFormat:@"%f",_endLocation.longitude],@"end_lng",@"19:00",@"appointment",[NSString stringWithFormat:@"%d",self.price],@"price",nil];
     }
     else {
         dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                [NSString stringWithFormat:@"%@",passenger.uid],@"passenger_id", @"国贸",@"start",
-                textEnd.titleLabel.text,@"end",@"19:00",@"appointment",nil];
+                [NSString stringWithFormat:@"%@",passenger.uid],@"passenger_id", textEnd.titleLabel.text,@"start",_startLocation.latitude,@"start_lat",_startLocation.longitude,@"start_lng",
+                textEnd.titleLabel.text,@"end",[NSString stringWithFormat:@"%f",_endLocation.latitude],@"end_lat",[NSString stringWithFormat:@"%f",_endLocation.longitude],@"end_lng",@"19:00",@"appointment",[NSString stringWithFormat:@"%d",self.price],@"price",nil];
     }
-    /*NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                          [NSString stringWithFormat:@"%@",passenger.uid],@"passenger_id", @"国贸",@"start",@"39.915",@"start_lat",@"116.405",@"start_lng",
-                          textEnd.text,@"end",@"19:00",@"appointment",nil];*/
     
     [conversationRequest createConversation:[NSMutableDictionary dictionaryWithObject:dict forKey:@"trip"]];
-    /*
-    
-    FCServiceResponse *response = [[FCServiceResponse alloc] init];
-    [response setDelegate:self];
-    response.strUrl = @"api/trips";
-    response.type = POST;
-    [response startQueryAndParse:[NSMutableDictionary dictionaryWithObject:dict forKey:@"trip"]];*/
 }
 
 - (void)queryCFinished:(NSMutableDictionary *)dict{
@@ -559,12 +521,26 @@
 - (void)inputLocationViewController:(FCInputLocationViewController *)controller
                    selectedLocation:(NSString *)selectionMessage andLocation:(CLLocationCoordinate2D)location starting:(BOOL)starting
 {
-    if (!selectionMessage || ![selectionMessage isEqualToString:@""]) {
+    if (!selectionMessage || [selectionMessage isEqualToString:@""]) {
         if (starting) {
             self.startLocation = location;
-            isUserLocation = NO;
-            [imgLocation removeFromSuperview];
-            [textStart setTitle:selectionMessage forState:UIControlStateNormal];
+            isUserLocation = YES;
+            imgLocation.hidden = YES;
+            [textStart setTitle:@"我的位置" forState:UIControlStateNormal];
+        }else{
+            [textEnd setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+            [textEnd setTitle:@"请输入目的地" forState:UIControlStateNormal];
+            [textEnd.titleLabel setFont:[UIFont systemFontOfSize:14]];
+        }
+    }else{
+        if (starting) {
+            if ([selectionMessage isEqualToString:@"我的位置"]) {
+                [self startIsUserLocation];
+            }else{
+                self.startLocation = location;
+                isUserLocation = NO;
+                [textStart setTitle:selectionMessage forState:UIControlStateNormal];
+            }
         }else{
             self.endLocation = location;
             [textEnd setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -574,4 +550,11 @@
     }
 }
 
+- (void)startIsUserLocation
+{
+    isUserLocation = YES;
+    imgLocation.hidden = NO;
+    imgLocation.hidden = YES;
+    [textStart setTitle:@"我的位置" forState:UIControlStateNormal];
+}
 @end

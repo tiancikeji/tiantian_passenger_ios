@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "FCLoginCheckViewController.h"
-
+#import "Passenger.h"
 
 @interface ViewController ()
 
@@ -19,6 +19,21 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveLogin"]) {
+        FCHomePageViewController *homePage = [[FCHomePageViewController alloc] init];
+        naviCtrl = [[UINavigationController alloc] initWithRootViewController:homePage];
+        naviCtrl.navigationBarHidden = YES;
+        naviCtrl.view.frame = self.view.bounds;
+        Passenger *_passenger = [[Passenger alloc] init];
+        _passenger.uid = [[NSUserDefaults standardUserDefaults] objectForKey:@"uid"];
+        homePage.passenger = _passenger;
+        homePage.view.frame = self.view.frame;
+        [self.view addSubview:naviCtrl.view];
+        return;
+    }
+    
     controller = [[FCLoginCheckViewController alloc] init];
     //controller = [[FCLoginViewController alloc] init];
     naviCtrl = [[UINavigationController alloc] initWithRootViewController:controller];
