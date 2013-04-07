@@ -8,6 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol CancelReasonViewDelegate <NSObject>
+
+- (void)chooseReason;
+
+@end
+
 @interface CancelReasonView : UIView
+
+@property(nonatomic,unsafe_unretained) id<CancelReasonViewDelegate> delegate;
+
+- (void)chooseReason:(UIButton *)sender;
 
 @end

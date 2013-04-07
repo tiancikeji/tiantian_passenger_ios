@@ -237,7 +237,9 @@ static NSString *const STCellIdentifier = @"STCell";
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    [_customView.searchField resignFirstResponder];
+    if ([_customView.searchField isFirstResponder]) {
+        [_customView.searchField resignFirstResponder];
+    }
 }
 
 - (void)didReceiveMemoryWarning

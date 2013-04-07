@@ -71,9 +71,10 @@
     
     [self loadNoteView];//加载
     [self loadToolBar];
-    
+    [self performSelector:@selector(showLocation) withObject:nil afterDelay:6];
+
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
+
     if (![app isConnectionAvailable]  ) {
         [FCHUD showErrorWithStatus:@"请你连接网络"];
     }else{
@@ -84,7 +85,6 @@
         }
         [self getDrivers];
     }
-    [self performSelector:@selector(showLocation) withObject:nil afterDelay:5];
 //    [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(getDrivers) userInfo:nil repeats:YES];
 
 //    [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(getDrivers) userInfo:nil repeats:YES
@@ -127,6 +127,14 @@
     [myMapView addAnnotation:_userAnnotation];
 }
 
+- (void)setMapCenter:(CLLocationDegrees)lat andLng:(CLLocationDegrees)lng
+{
+    newRegion.center.latitude = lat;
+    newRegion.center.longitude = lng;
+    newRegion.span.latitudeDelta = 0.03;
+    newRegion.span.longitudeDelta = 0.03;
+    [myMapView setRegion:newRegion];
+}
 /*
  
  现在打车按钮背景
@@ -368,7 +376,6 @@
         annotation.driver = driver;
         
         [arrayAnn addObject:annotation];
-//        annotation.coordinate = coor;
     }
     [myMapView addAnnotations:arrayAnn];
 }
@@ -381,10 +388,6 @@
 - (void)showLocation{
     [locationManager startUpdatingLocation];
     [myMapView setShowsUserLocation:YES];
-    
-//    newRegion.center = coorUser;
-//    [myMapView setRegion:newRegion];
-//    [self adUserAnnotation];
 }
 
 NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
@@ -424,10 +427,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 
 - (void)mapView:(BMKMapView *)mapView didUpdateUserLocation:(BMKUserLocation *)userLocation{
     coorUser = userLocation.coordinate;
-    newRegion.center = coorUser;
-    newRegion.span.latitudeDelta = 0.03;
-    newRegion.span.longitudeDelta = 0.03;
-    [myMapView setRegion:newRegion];
+    [self setMapCenter:coorUser.latitude andLng:coorUser.longitude];
     [myMapView setShowsUserLocation:NO];
 }
 
@@ -447,7 +447,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
                 customPinView.image = [UIImage imageNamed:@"orange.png"];
             }
             
-//            customPinView.animatesDrop = NO;
+//            customPinView.animatesDrop = YES;
             customPinView.canShowCallout = NO;
             return customPinView;
         }else{
@@ -537,6 +537,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 //    }
 }
 
+/* 司机应答后 显示司机信息 */
 - (void)showDriverInfo:(Driver *)driverInfo{
     if (!driverInfoView) {
         driverInfoView = [[FCDriverInfoView alloc] initWithFrame:CGRectMake(10, 10, 300, 115)];
@@ -583,10 +584,12 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     
 }
 
+/* 控制显示和隐藏等待司机应答状态栏 */
 - (void)showRequestView:(BOOL)status{
     if (status) {
         if (!waitingRequestView) {
             waitingRequestView = [[FCWaitingRequestView alloc] initWithFrame:CGRectMake(10, 10, 300, 65)];
+            waitingRequestView.delegate = self;
             [waitingRequestView performSelector:@selector(loadContent)];
         }else{
             [waitingRequestView performSelector:@selector(updateStatus)];
@@ -599,6 +602,16 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
             waitingRequestView.hidden = YES;
         }
     }
+}
+
+
+#pragma mark
+#pragma mark FCWaitingRequestViewDelegate
+
+//倒计时结束
+- (void)countDownEnding
+{
+    [self showCancelView];
 }
 
 /*
@@ -622,8 +635,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
         }
         btnCancelRequest.hidden = NO;
         btnCall.hidden = YES;
-    }
-    else {
+    }else {
         btnCancelRequest.hidden = YES;
         btnCall.hidden = NO;
     }
@@ -656,6 +668,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
         [self.view addSubview:_cancelView];
     }else{
         _cancelView.hidden = NO;
+        _cancelView.reasonView.hidden = YES;
     }
 
 }
@@ -663,6 +676,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 #pragma mark 
 #pragma mark CancelViewDelegate
 
+//确定取消叫车
 - (void)cancelCall
 {
     if (waitingRequestView.hidden == NO) {
@@ -672,6 +686,8 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
         bubbleCanUse = YES;
         _translucentView.hidden = YES;
         _cancelView.hidden = YES;
+        _cancelView.reasonView.hidden = YES;
+        [waitingRequestView.countTimer invalidate];
     }else{
         bubbleCanUse = YES;
         [self updateConversations:ConversationTypeRefuse];
@@ -681,14 +697,17 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
         imgNote.hidden = NO;
         _translucentView.hidden = YES;
         _cancelView.hidden = YES;
+        [self showAllAnnotation:YES];
     }
 
 }
 
+//继续叫车
 - (void)continueCall
 {
     _translucentView.hidden = YES;
     _cancelView.hidden = YES;
+//    [self showWaitingPanel:arrayReceiveDrivers];
 }
 
 #define CONVERSATION_REFRESH_TIME 10
@@ -703,7 +722,6 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     [self showCancelBtn:YES];
     
     waitingRequestView.labelCount.text = [NSString stringWithFormat:@"共有%d辆出租车收到消息",array.count];
-    
     [self performSelector:@selector(getMyTripConversations) withObject:nil afterDelay:CONVERSATION_REFRESH_TIME];
 }
 
@@ -762,6 +780,8 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
             Driver *dri = [arrayReceiveDrivers objectAtIndex:i];
             if (dri.uid.intValue == [conversation.to intValue]) {
                 [self showDriverInfo:dri];
+                _answerDriver = dri;
+                [self showAllAnnotation:NO];
                 break;
             }
             
@@ -773,6 +793,32 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     NSLog(@"%@",dict);
 }
 
+- (void)showAllAnnotation:(BOOL)show
+{
+    if (show) {
+        [self getDrivers];
+        [self showLocation];
+//        [self adUserAnnotation];
+//        [self addDriverLocation];
+    }else{
+        [myMapView removeAnnotation:_userAnnotation];
+        [myMapView removeAnnotations:arrayAnn];
+        for (int i = 0; i < arrayDrivers.count; i++) {
+            Driver *driver = [arrayDrivers objectAtIndex:i];
+            
+            if ([driver.car_license isEqual:_answerDriver.car_license]) {
+                FCDriverAnnotation* annotation = [[FCDriverAnnotation alloc]initWithLatitude:driver.lat.floatValue longitude:driver.lng.floatValue];
+                annotation.driver = driver;
+                [myMapView addAnnotation:annotation];
+                
+                [self setMapCenter:driver.lat.floatValue andLng:driver.lng.floatValue];
+                
+                [NSThread cancelPreviousPerformRequestsWithTarget:self selector:@selector(getDrivers) object:nil];
+                break;
+            }
+        }
+    }
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

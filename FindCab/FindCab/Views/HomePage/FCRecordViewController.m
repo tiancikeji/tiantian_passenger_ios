@@ -284,7 +284,7 @@
     }
     inputLocation.delegate = self;
     inputLocation.coorUser = self.coorUser;
-    [self presentModalViewController:inputLocation animated:YES];
+    [self.navigationController presentModalViewController:inputLocation animated:YES];
 
 }
 
@@ -378,7 +378,7 @@
     }
     else {
         dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                [NSString stringWithFormat:@"%@",passenger.uid],@"passenger_id", textEnd.titleLabel.text,@"start",_startLocation.latitude,@"start_lat",_startLocation.longitude,@"start_lng",
+                [NSString stringWithFormat:@"%@",passenger.uid],@"passenger_id", textStart.titleLabel.text,@"start",[NSString stringWithFormat:@"%f",_startLocation.latitude],@"start_lat",[NSString stringWithFormat:@"%f",_startLocation.longitude],@"start_lng",
                 textEnd.titleLabel.text,@"end",[NSString stringWithFormat:@"%f",_endLocation.latitude],@"end_lat",[NSString stringWithFormat:@"%f",_endLocation.longitude],@"end_lng",@"19:00",@"appointment",[NSString stringWithFormat:@"%d",self.price],@"price",nil];
     }
     
@@ -539,6 +539,7 @@
             }else{
                 self.startLocation = location;
                 isUserLocation = NO;
+                imgLocation.hidden = YES;
                 [textStart setTitle:selectionMessage forState:UIControlStateNormal];
             }
         }else{

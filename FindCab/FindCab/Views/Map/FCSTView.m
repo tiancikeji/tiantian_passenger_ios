@@ -46,6 +46,7 @@
         UIImage *searchBg = [UIImage imageNamed:@"searchInput.png"];
         
         UIImageView *view = [[UIImageView alloc] initWithImage:searchBg];
+        [view setUserInteractionEnabled:YES];
         [view setFrame:CGRectMake(10, 0, searchBg.size.width, searchBg.size.height)];
         [view setCenter:CGPointMake(10+searchBg.size.width/2, bar.frame.size.height/2)];
         [bar addSubview:view];
@@ -73,10 +74,10 @@
 
 -(void)addTapGuesture
 {
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(confirmAction:)];
-    tapGesture.delegate = self;
-    [tapGesture setNumberOfTapsRequired:1];
-    [_searchField addGestureRecognizer:tapGesture];
+//    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(confirmAction:)];
+//    tapGesture.delegate = self;
+//    [tapGesture setNumberOfTapsRequired:1];
+//    [_searchField addGestureRecognizer:tapGesture];
 }
 
 -(void)confirmAction:(UITapGestureRecognizer *)gesture

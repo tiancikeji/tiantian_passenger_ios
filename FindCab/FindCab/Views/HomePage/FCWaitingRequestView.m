@@ -26,38 +26,23 @@
     [self addSubview:imgBg];
     
     UIImage *loading = [UIImage imageNamed:@"loading.png"];
-    imgLoading = [[UIImageView alloc] initWithImage:nil];
-    imgLoading.frame = CGRectMake(0, 0, loading.size.width, loading.size.height);
-    imgLoading.center = CGPointMake(25, self.frame.size.height/2.0);
+    _lightImageView = [[UIImageView alloc] initWithImage:loading];
+    _lightImageView.frame = CGRectMake(0, 0, loading.size.width, loading.size.height);
+    _lightImageView.center = CGPointMake(25, self.frame.size.height/2.0);
+     
+    [self addSubview:_lightImageView];
     
-    CALayer *logoLayer = [CALayer layer];
-    logoLayer.bounds = CGRectMake(0, 0, loading.size.width, loading.size.height);
-    logoLayer.position = CGPointMake(15, 15);
-    logoLayer.contents = (id)loading.CGImage;
-    
-    
-    
-    int direction = 1;
-	CABasicAnimation* rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-	rotationAnimation.toValue = [NSNumber numberWithFloat:(200 * M_PI) * direction];
-	rotationAnimation.duration = 100.0f;
-    rotationAnimation.repeatDuration = 99999;
-	rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    [logoLayer addAnimation:rotationAnimation forKey:@"rotateAnimation"];
-    
-    [imgLoading.layer addSublayer:logoLayer];
-    
-    [self addSubview:imgLoading];
-    
-    _time = [[UILabel alloc] initWithFrame:CGRectMake(7, 3, 20, loading.size.height-10)];
+    _time = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 20, loading.size.height-10)];
+    [_time setCenter:CGPointMake(29, _lightImageView.center.y)];
     [_time setBackgroundColor:[UIColor clearColor]];
     [_time setTextColor:[UIColor whiteColor]];
-    [_time setText:@"60"];
+    [_time setText:@"90"];
     [_time setFont:[UIFont boldSystemFontOfSize:15]];
-    [imgLoading addSubview:_time];
-    timeDown = 60;
-
-    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(count:) userInfo:nil repeats:YES];
+    [self addSubview:_time];
+    timeDown = 90;
+    lightTimeDown = 10000;
+    _countTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(count:) userInfo:nil repeats:YES];
+    [self startRotate];
     
     for (int i = 0; i < 2; i++) {
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(54, 13+23*i, 200, 15)];
@@ -80,16 +65,67 @@
 - (void)count:(NSTimer *)timer
 {
     [_time setText:[NSString stringWithFormat:@"%d",--timeDown]];
-    if (self.hidden == YES || timeDown == 0) {
+    if (timeDown == 0) {
         [timer invalidate];
-        [_time setText:@"60"];
+        [_delegate countDownEnding];
     }
 }
 
 - (void)updateStatus{
-    timeDown = 60;
-    [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(count:) userInfo:nil repeats:YES];
-    [imgLoading.layer animationForKey:@"rotateAnimation"];
+    timeDown = 90;
+    [_time setText:[NSString stringWithFormat:@"%d",timeDown]];
+    [NSTimer scheduledTimerWithTimeInterval:1.0f
+                                     target:self
+                                   selector:@selector(count:)
+                                   userInfo:nil
+                                    repeats:YES];
+    [self startRotate];
+}
+
+
+- (void)startRotate
+
+{
+    self.rotateTimer = [NSTimer scheduledTimerWithTimeInterval:0.05
+                                                        target:self
+                                                      selector:@selector(rotateGraduation)
+                                                      userInfo:nil
+                                                       repeats:YES];
+}
+
+//关闭定时器
+- (void)stopTimer
+
+{
+    if ([self.rotateTimer isValid])
+    {
+        [self.rotateTimer invalidate];
+        self.rotateTimer = nil;
+        lightTimeDown = 10000;
+    }
+    
+}
+
+
+
+//旋转动画
+- (void)rotateGraduation
+
+{
+    lightTimeDown--;
+    if (lightTimeDown == 0)
+    {
+        [self stopTimer];
+        // doSomeThing //旋转完毕 可以干点别的
+        lightTimeDown = 10000;
+    }else{
+        //计算角度 旋转
+        static CGFloat radian = 150 * (M_2_PI / 360);
+        CGAffineTransform transformTmp = self.lightImageView.transform;
+        transformTmp = CGAffineTransformRotate(transformTmp, radian);
+        self.lightImageView.transform = transformTmp;
+    };
+    
 }
 
 /*

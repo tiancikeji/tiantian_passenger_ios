@@ -23,7 +23,7 @@ enum ConversationType{
     ConversationTypeAccept = 3,
 };
 
-@interface FCHomePageViewController : FCBaseViewController<BMKMapViewDelegate,CLLocationManagerDelegate,FCServiceResponseDelegate,CancelViewDelegate>{
+@interface FCHomePageViewController : FCBaseViewController<BMKMapViewDelegate,CLLocationManagerDelegate,FCServiceResponseDelegate,CancelViewDelegate,FCWaitingRequestViewDelegate>{
     BMKMapView *myMapView;
     NSMutableArray *arrayDrivers;//司机信息
     NSMutableArray *arrayAnn;
@@ -53,8 +53,11 @@ enum ConversationType{
 @property (nonatomic, strong) UIView *translucentView;
 @property (nonatomic, strong) CancelView *cancelView;
 @property (nonatomic, strong) NSString *myLocation;
+@property (nonatomic, strong) Driver *answerDriver;
 
 - (void)showWaitingPanel:(NSMutableArray *)array;
 - (void)adUserAnnotation;
+- (void)showAllAnnotation:(BOOL)show;//接收司机响应后，只显示当前接收响应的司机位置 其他标注点移除
+- (void)setMapCenter:(CLLocationDegrees)lat andLng:(CLLocationDegrees)lng;//设置地图中心位置
 
 @end
