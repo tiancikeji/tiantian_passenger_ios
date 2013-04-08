@@ -15,14 +15,13 @@
 - (void)continueCall;
 
 @end
-@interface CancelView : UIView<CancelReasonViewDelegate>
+@interface CancelView : UIView
 {
     __unsafe_unretained id<CancelViewDelegate> _delegate;
 }
 
 @property(nonatomic,unsafe_unretained) id<CancelViewDelegate> delegate;
 @property(nonatomic,strong) UIView *translucentView;
-@property(nonatomic,strong) CancelReasonView *reasonView;
 
 - (void)sure:(UIButton *)sender;
 - (void)stillCall:(UIButton *)sender;

@@ -7,15 +7,18 @@
 //
 
 #import "FCHomePageViewController.h"
-#import "FCRecordViewController.h"
 #import "FCDriverAnnotationView.h"
 #import "FCConversationRequest.h"
 #import "FCDriverAnnotation.h"
 #import "AppDelegate.h"
 #import "Conversation.h"
+#import "FCRecordViewController.h"
+#import "FCSettingsViewController.h"
 //#import "FCLoginViewController.h"
 
 @interface FCHomePageViewController ()
+
+@property (nonatomic, strong) FCRecordViewController *recordController;
 
 - (void)loadToolBar;//加载工具条图片
 - (void)showCallBtn:(BOOL)status;//控制 “现在打车”按钮 和 取消打车时弹出是否打车界面 的切换
@@ -66,9 +69,6 @@
     locationManager.distanceFilter = kCLDistanceFilterNone;
     [locationManager startUpdatingLocation];
     
-//    coorUser = myMapView.userLocation.coordinate;
-//    newRegion.center = coorUser;
-    
     [self loadNoteView];//加载
     [self loadToolBar];
     [self performSelector:@selector(showLocation) withObject:nil afterDelay:6];
@@ -85,45 +85,24 @@
         }
         [self getDrivers];
     }
-//    [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(getDrivers) userInfo:nil repeats:YES];
+}
 
-//    [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(getDrivers) userInfo:nil repeats:YES
-//    UIButton *btnLocation = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    [btnLocation setFrame:CGRectMake(10, self.view.frame.size.height-self.navigationController.navigationBar.frame.size.height-40, 80, 30)];
-//    [btnLocation setTitle:@"定位" forState:UIControlStateNormal];
-//    
-//    [self.view addSubview:btnLocation];
-    
-    
-    
-//    FCDriverAnnotation* annotation = [[FCDriverAnnotation alloc]init];
-//    CLLocationCoordinate2D coor;
-//    coor.latitude = 39.915;
-//    coor.longitude = 116.404;
-//    annotation.coordinate = coor;
-//    [myMapView addAnnotation:annotation];
-    
-    
-
-    //[self showDriverContent:YES];
-	// Do any additional setup after loading the view.
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self showLocation];
 }
 
 //添加用户位置标注点
 - (void)adUserAnnotation
 {
-//    if (_userAnnotation) {
-//        [myMapView removeAnnotation:_userAnnotation];
-//    }
-//    _userAnnotation=[[UserAnnotation alloc] initWithLatitude:coorUser.latitude andLongitude:coorUser.longitude andTitle:_myLocation];
-//    [myMapView   addAnnotation:_userAnnotation];
     if (_userAnnotation) {
         [myMapView removeAnnotation:_userAnnotation];
     }else{
         _userAnnotation = [[BMKPointAnnotation alloc] init];
     }
     [_userAnnotation setTitle:_myLocation];
-    [_userAnnotation setCoordinate:coorUser];
+    [_userAnnotation setCoordinate:_coorUser];
     [myMapView addAnnotation:_userAnnotation];
 }
 
@@ -282,7 +261,7 @@
      
      新需求:显示可视范围内的司机 接口需改变
      */
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",coorUser.latitude],@"driver[lat]",[NSString stringWithFormat:@"%f",coorUser.longitude],@"driver[lng]", @"5",@"scope",nil];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%f",_coorUser.latitude],@"driver[lat]",[NSString stringWithFormat:@"%f",_coorUser.longitude],@"driver[lng]", @"5",@"scope",nil];
     
 //    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"39.915",@"driver[lat]",@"116.404",@"driver[lng]", @"5",@"scope",nil];
     
@@ -340,6 +319,11 @@
     [FCHUD dismiss];
 }
 
+- (void)queryError:(NSError *)errorConnect
+{
+    
+}
+
 /*
  
  更新状态栏司机数量
@@ -370,9 +354,6 @@
     for (int i = 0; i < arrayDrivers.count; i++) {
         Driver *driver = [arrayDrivers objectAtIndex:i];
         FCDriverAnnotation* annotation = [[FCDriverAnnotation alloc]initWithLatitude:driver.lat.floatValue longitude:driver.lng.floatValue];
-//        CLLocationCoordinate2D coor;
-//        coor.latitude = driver.lat.floatValue;
-//        coor.longitude = driver.lng.floatValue;
         annotation.driver = driver;
         
         [arrayAnn addObject:annotation];
@@ -398,19 +379,19 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
  
  */
 - (void)clickCallBtn{
-    FCRecordViewController *recordController = [[FCRecordViewController alloc] init];
-    recordController.passenger = passenger;
-    recordController.coorUser = coorUser;
-    recordController.myLocationName = _myLocation;
-    [self.navigationController pushViewController:recordController animated:YES];
-    [recordController performSelector:@selector(setMainContent:) withObject:self];
+    _recordController = [[FCRecordViewController alloc] init];
+    _recordController.passenger = passenger;
+    _recordController.coorUser = _coorUser;
+    _recordController.myLocationName = _myLocation;
+    [self.navigationController pushViewController:_recordController animated:YES];
+    [_recordController performSelector:@selector(setMainContent:) withObject:self];
 }
 
 //click cancel/oncar btn
 - (void)clickToolBarBtn:(id)sender{
     int tag = ((UIButton *)sender).tag;
     bubbleCanUse = NO;
-    [self updateConversations:tag==0?ConversationTypeRefuse:ConversationTypeAccept];
+//    [self updateConversations:tag==0?ConversationTypeRefuse:ConversationTypeAccept];
     [self showCallBtn:YES];
     [self showDriverContent:NO];
     imgNote.hidden = NO;
@@ -426,8 +407,8 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 }
 
 - (void)mapView:(BMKMapView *)mapView didUpdateUserLocation:(BMKUserLocation *)userLocation{
-    coorUser = userLocation.coordinate;
-    [self setMapCenter:coorUser.latitude andLng:coorUser.longitude];
+    _coorUser = userLocation.coordinate;
+    [self setMapCenter:_coorUser.latitude andLng:_coorUser.longitude];
     [myMapView setShowsUserLocation:NO];
 }
 
@@ -531,10 +512,6 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     _myLocation = [NSString stringWithFormat:@"%@%@%@",myCityName,myDetailAddress,mySubAddress];
     [self adUserAnnotation];
     [locationManager stopUpdatingLocation];
-//    [_userAnnotation setTitle:_myLocation];
-
-//    if (_myLocation) {
-//    }
 }
 
 /* 司机应答后 显示司机信息 */
@@ -547,41 +524,6 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     [self.view addSubview:driverInfoView];
     driverInfoView.driverInfo = driverInfo;
     [driverInfoView performSelector:@selector(updateUserInfo)];
-    /*
-    if (!viDriverInfo) {
-        viDriverInfo = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 100)];
-        UIImageView *bg = [[UIImageView alloc] initWithFrame:viDriverInfo.bounds];
-        bg.backgroundColor = [UIColor blackColor];
-        bg.alpha = 0.5;
-        [viDriverInfo addSubview:bg];
-        
-        labelCarLicense = [[UILabel alloc] initWithFrame:CGRectMake(40, 0, 200, 20)];
-        labelMobile = [[UILabel alloc] initWithFrame:CGRectMake(40, 20, 200, 20)];
-        labelName = [[UILabel alloc] initWithFrame:CGRectMake(40, 60, 200, 20)];
-        labelRate = [[UILabel alloc] initWithFrame:CGRectMake(40, 80, 200, 20)];
-        
-        [viDriverInfo addSubview:labelCarLicense];
-        [viDriverInfo addSubview:labelMobile];
-        [viDriverInfo addSubview:labelName];
-        [viDriverInfo addSubview:labelRate];
-        
-        for (id element in viDriverInfo.subviews) {
-            UILabel *lb = (UILabel *)element;
-            if ([lb isKindOfClass:[UILabel class]]) {
-                lb.font = [UIFont systemFontOfSize:14];
-                lb.textColor = [UIColor whiteColor];
-                lb.backgroundColor = [UIColor clearColor];
-            }
-        }
-    }
-    labelCarLicense.text = driverInfo.car_license;
-    labelMobile.text = driverInfo.mobile;
-    labelName.text = driverInfo.name;
-    labelRate.text = [NSString stringWithFormat:@"%@星",driverInfo.rate];
-    
-    [self.view addSubview:viDriverInfo];
-    */
-    
 }
 
 /* 控制显示和隐藏等待司机应答状态栏 */
@@ -590,15 +532,16 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
         if (!waitingRequestView) {
             waitingRequestView = [[FCWaitingRequestView alloc] initWithFrame:CGRectMake(10, 10, 300, 65)];
             waitingRequestView.delegate = self;
+            [self.view addSubview:waitingRequestView];
             [waitingRequestView performSelector:@selector(loadContent)];
         }else{
             [waitingRequestView performSelector:@selector(updateStatus)];
         }
         waitingRequestView.hidden = NO;
-        [self.view addSubview:waitingRequestView];
     }
     else {
         if (waitingRequestView) {
+            [waitingRequestView stopAllTimer];
             waitingRequestView.hidden = YES;
         }
     }
@@ -608,7 +551,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 #pragma mark
 #pragma mark FCWaitingRequestViewDelegate
 
-//倒计时结束
+//倒计时结束 自动弹出是否继续打车
 - (void)countDownEnding
 {
     [self showCancelView];
@@ -668,7 +611,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
         [self.view addSubview:_cancelView];
     }else{
         _cancelView.hidden = NO;
-        _cancelView.reasonView.hidden = YES;
+        _reasonView.hidden = YES;
     }
 
 }
@@ -676,38 +619,66 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 #pragma mark 
 #pragma mark CancelViewDelegate
 
-//确定取消叫车
+/*
+ 
+ 确定取消叫车
+ 1、等待司机应答时，点击取消叫车-》选择取消原因-》取消对话 显示正常地图界面
+ 2、司机已应答后，点击取消叫车-》确认取消-》取消原因-》更新对话状态为拒绝 显示正常地图界面
+ 
+*/
+
 - (void)cancelCall
 {
-    if (waitingRequestView.hidden == NO) {
-        [NSThread cancelPreviousPerformRequestsWithTarget:self selector:@selector(getMyTripConversations) object:nil];
-        [self showCancelBtn:NO];
-        [self showRequestView:NO];
-        bubbleCanUse = YES;
-        _translucentView.hidden = YES;
-        _cancelView.hidden = YES;
-        _cancelView.reasonView.hidden = YES;
-        [waitingRequestView.countTimer invalidate];
+    if (!_reasonView) {
+        _reasonView = [[CancelReasonView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+        [_reasonView setFrame:CGRectMake(0, self.view.frame.size.height-_reasonView.frame.size.height, _reasonView.frame.size.width, _reasonView.frame.size.height)];
+        _reasonView.delegate = self;
+        [self.view addSubview:_reasonView];
     }else{
-        bubbleCanUse = YES;
-        [self updateConversations:ConversationTypeRefuse];
-        [self showCallBtn:YES];
-        [self showCancelBtn:NO];
-        [self showDriverContent:NO];
-        imgNote.hidden = NO;
-        _translucentView.hidden = YES;
-        _cancelView.hidden = YES;
-        [self showAllAnnotation:YES];
+        _reasonView.hidden = NO;
     }
-
 }
 
-//继续叫车
+/*
+ 
+ 继续叫车 
+ 等待应答过程中取消叫车-》继续叫车 取消界面消失即可
+ 应答最后一秒弹出取消叫车和继续叫车-》继续叫车 重新发送刚刚发送的叫车信息
+ 
+ */
 - (void)continueCall
 {
     _translucentView.hidden = YES;
     _cancelView.hidden = YES;
-//    [self showWaitingPanel:arrayReceiveDrivers];
+    
+    if ([waitingRequestView.time.text isEqualToString:@"0"] ) {
+        [waitingRequestView stopAllTimer];
+        [_recordController performSelector:@selector(send) withObject:nil withObject:nil];
+    }
+}
+
+#pragma mark
+#pragma mark CancelReasonViewDelegate
+
+- (void)clickReason:(UIButton *)sender
+{
+    if (waitingRequestView.hidden == NO) {
+        [NSThread cancelPreviousPerformRequestsWithTarget:self selector:@selector(getMyTripConversations) object:nil];
+        [self showRequestView:NO];
+        [waitingRequestView stopAllTimer];
+    }else{
+        NSString *reason = sender.titleLabel.text;
+        [self updateConversations:ConversationTypeRefuse andReason:reason];
+        [self showCallBtn:YES];
+        [self showDriverContent:NO];
+        imgNote.hidden = NO;
+        [self showAllAnnotation:YES];
+    }
+    [self showCancelBtn:NO];
+    bubbleCanUse = YES;
+    _translucentView.hidden = YES;
+    _cancelView.hidden = YES;
+    _reasonView.hidden = YES;
 }
 
 #define CONVERSATION_REFRESH_TIME 10
@@ -731,19 +702,20 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 }
 
 - (void)showProfile{
+    FCSettingsViewController *settings = [[FCSettingsViewController alloc] init];
+    [self.navigationController pushViewController:settings animated:YES];
 }
 
-
+#pragma mark
 #pragma mark - update conversations
 
-- (void)updateConversations:(enum ConversationType)type{
+- (void)updateConversations:(int)type andReason:(NSString *)reason{
     [NSThread cancelPreviousPerformRequestsWithTarget:self selector:@selector(getMyTripConversations) object:nil];
     bubbleCanUse = YES;
     if (!conversationRequest) {
         [self createConversationRequest];
     }
-    [conversationRequest updateConversation:converID status:type];
-    
+    [conversationRequest updateConversation:converID status:type andCancelReason:reason];
 }
 
 - (void)createConversationRequest{
@@ -793,6 +765,11 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     NSLog(@"%@",dict);
 }
 
+/*
+ 
+ 司机应答时 控制显示全部标注点 和 只显示应答司机标注点的切换
+ 
+ */
 - (void)showAllAnnotation:(BOOL)show
 {
     if (show) {

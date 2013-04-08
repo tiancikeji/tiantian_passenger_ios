@@ -18,6 +18,7 @@
 #import "Passenger.h"
 
 @class FCHomePageViewController;
+extern NSString *CTSettingCopyMyPhoneNumber();
 
 @interface FCLoginCheckViewController : FCBaseViewController<UITextFieldDelegate,FCServiceResponseDelegate>
 {
@@ -37,5 +38,7 @@
 
 /* 提交验证 */
 @property(nonatomic,strong) UIButton *sumbitButton;
+
+- (NSString *)myNumber;
 
 @end

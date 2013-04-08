@@ -14,7 +14,7 @@ static NSString *const STCellIdentifier = @"STCell";
 @interface FCInputLocationViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     FCSTView *_customView;
-    NSMutableArray *_datasource;
+//    NSMutableArray *_datasource;
     BMKMapView *_map;
 }
 @end
@@ -126,6 +126,13 @@ static NSString *const STCellIdentifier = @"STCell";
             NSLog(@"%@,%@",poi.name,poi.address);
             [_searchDatasource addObject:info];
         }
+    }else{
+        [_searchDatasource removeAllObjects];
+        if ([_searchDatasource count] == 0) {
+            AddressInfo *info = [[AddressInfo alloc] init];
+            info.placeName = @"未找到相关结果";
+            [_searchDatasource addObject:info];
+        }
     }
     [_customView.tableView reloadData];
 }
@@ -136,7 +143,7 @@ static NSString *const STCellIdentifier = @"STCell";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 //    NSArray *datasouce = [tableView isEqual:[_customView tableView]] ? _datasource : _searchDatasource;
-  NSArray *  datasouce = (![_searchDatasource count])?_datasource:_searchDatasource;
+//  NSArray *  datasouce = (![_searchDatasource count])?_datasource:_searchDatasource;
     return listNumber;
 }
 

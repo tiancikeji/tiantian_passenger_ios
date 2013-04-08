@@ -82,6 +82,7 @@
     _phoneNumberField.font = [UIFont systemFontOfSize:13];
     _phoneNumberField.keyboardType = UIKeyboardTypeNumberPad;
     _phoneNumberField.placeholder = @"请输入手机号码";
+    _phoneNumberField.text = [self myNumber];
     [imgInputBg addSubview:_phoneNumberField];
     
     
@@ -121,6 +122,10 @@
     [_sumbitButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_sumbitButton addTarget:self action:@selector(submitButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_sumbitButton];
+}
+
+- (NSString *)myNumber{
+    return CTSettingCopyMyPhoneNumber();
 }
 
 /* 
@@ -206,7 +211,7 @@
 
 - (void)queryError:(NSError *)errorConnect
 {
-    [FCHUD showErrorWithStatus:@"获取失败"];
+    [FCHUD showErrorWithStatus:@"登陆失败，请核对手机号和验证码"];
 }
 
 /*

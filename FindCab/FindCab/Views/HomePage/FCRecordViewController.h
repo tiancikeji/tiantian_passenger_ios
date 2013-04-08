@@ -7,30 +7,28 @@
 //
 
 #import "FCBaseViewController.h"
-#import "iflyMSC/SpeechUser.h"
-#import "iflyMSC/UpLoadController.h"
-#import "iflyMSC/IFlyRecognizeControl.h"
-#import "iFlyMSC/IFlySynthesizerControl.h"
+//#import "iflyMSC/SpeechUser.h"
+//#import "iflyMSC/UpLoadController.h"
+//#import "iflyMSC/IFlyRecognizeControl.h"
+//#import "iFlyMSC/IFlySynthesizerControl.h"
 #import "FCConversationRequest.h"
 #import "FCInputLocationViewController.h"
 #import "AddressInfo.h"
 
-@interface FCRecordViewController : FCBaseViewController<AVAudioRecorderDelegate,UpLoadControllerDelegate,IFlyRecognizeControlDelegate,IFlyRecognizeControlDelegate, FCInputLocationViewControllerDelegate>{
+@interface FCRecordViewController : FCBaseViewController<FCInputLocationViewControllerDelegate>{
     
-    IFlyRecognizeControl		*_iFlyRecognizeControl;         //识别控件,recognizer
-    AVAudioRecorder *recorder;
-    NSURL *recordedTmpFile;
+//    IFlyRecognizeControl		*_iFlyRecognizeControl;         //识别控件,recognizer
+//    AVAudioRecorder *recorder;
+//    NSURL *recordedTmpFile;
     
-    UIButton *btnFly;
+//    UIButton *btnFly;
     
     UIButton *textStart,*textEnd;
     UIButton *btnClear;
     UIImageView *imgLocation;
     
     id mainContent;
-    
     FCConversationRequest *conversationRequest;
-    
     BOOL isUserLocation;
 //    NSError *error;
 }

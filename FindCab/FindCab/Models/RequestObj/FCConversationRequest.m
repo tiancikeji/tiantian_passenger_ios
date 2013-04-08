@@ -34,7 +34,7 @@
     [response startQueryAndParse:[NSMutableDictionary dictionaryWithObject:passenger.uid forKey:@"from_id"]];
 }
 
-- (void)updateConversation:(NSNumber *)conversationID status:(enum ConversationType)type{
+- (void)updateConversation:(NSNumber *)conversationID status:(int)type andCancelReason:(NSString *)reason{
     tagRequest = 3;
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     switch (type) {
@@ -51,6 +51,7 @@
         default:
             break;
     }
+    [dict setObject:reason forKey:@"content"];
     FCServiceResponse *response = [[FCServiceResponse alloc] init];
     [response setDelegate:self];
     response.strUrl = [NSString stringWithFormat:@"api/conversations/%@",conversationID];
@@ -86,6 +87,11 @@
     if ([m_delegate respondsToSelector:@selector(queryCFinished:)]) {
         [m_delegate performSelector:@selector(queryCFinished:) withObject:dict];
     }
+}
+
+- (void)queryError:(NSError *)errorConnect
+{
+    
 }
 
 @end

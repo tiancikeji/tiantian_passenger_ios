@@ -62,9 +62,9 @@
     return self;
 }
 
-- (void)chooseReason:(id)sender
+- (void)chooseReason:(UIButton *)sender
 {
-    [_delegate chooseReason];
+    [_delegate clickReason:sender];
 }
 
 /*

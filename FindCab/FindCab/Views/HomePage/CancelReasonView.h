@@ -10,7 +10,7 @@
 
 @protocol CancelReasonViewDelegate <NSObject>
 
-- (void)chooseReason;
+- (void)clickReason:(UIButton *)sender;
 
 @end
 

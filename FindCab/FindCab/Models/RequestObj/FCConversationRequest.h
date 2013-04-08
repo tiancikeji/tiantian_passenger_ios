@@ -27,6 +27,6 @@
 - (void)setDelegate:(id)sender;
 - (void)createConversation:(NSMutableDictionary *)dict;
 - (void)getConversation:(NSNumber *)tripID;
-- (void)updateConversation:(NSNumber *)conversationID status:(enum ConversationType)type;
+- (void)updateConversation:(NSNumber *)conversationID status:(int)type andCancelReason:(NSString *)reason;
 
 @end

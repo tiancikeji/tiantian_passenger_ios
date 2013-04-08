@@ -62,7 +62,8 @@
         [btnNaviLeft setBackgroundImage:[UIImage imageNamed:@"cancelA"] forState:UIControlStateHighlighted];
         btnNaviLeft.titleLabel.font = [UIFont systemFontOfSize:14];
         [btnNaviLeft setTitle:@"取消" forState:UIControlStateNormal];
-        [btnNaviRight setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [btnNaviLeft setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [btnNaviLeft addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
         if (strTitle) {
             [btnNaviLeft setTitle:strTitle forState:UIControlStateNormal];
             [btnNaviLeft setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];

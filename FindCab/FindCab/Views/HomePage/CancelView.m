@@ -50,12 +50,6 @@
         [still setFrame:CGRectMake(0, 0, stillBg.size.width, stillBg.size.height)];
         [still setCenter:CGPointMake(frame.size.width/2, frame.size.height/5*4-5)];
         [self addSubview:still];
-        
-        _reasonView = [[CancelReasonView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-        [_reasonView setFrame:CGRectMake(0, self.frame.size.height-_reasonView.frame.size.height, _reasonView.frame.size.width, _reasonView.frame.size.height)];
-        _reasonView.delegate = self;
-        [self addSubview:_reasonView];
-        _reasonView.hidden = YES;
     }
     return self;
 }
@@ -69,14 +63,9 @@
 /* 确认取消 */
 - (void)sure:(UIButton *)sender
 {
-//    self.hidden = YES;
-    _reasonView.hidden = NO;
-}
-
-- (void)chooseReason
-{
     [_delegate cancelCall];
 }
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

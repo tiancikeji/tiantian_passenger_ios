@@ -14,6 +14,8 @@
 #import "FCServiceResponse.h"
 #import "CancelView.h"
 #import "UserAnnotation.h"
+#import "CancelReasonView.h"
+//#import "FCRecordViewController.h"
 
 @class FCConversationRequest;
 
@@ -23,7 +25,7 @@ enum ConversationType{
     ConversationTypeAccept = 3,
 };
 
-@interface FCHomePageViewController : FCBaseViewController<BMKMapViewDelegate,CLLocationManagerDelegate,FCServiceResponseDelegate,CancelViewDelegate,FCWaitingRequestViewDelegate>{
+@interface FCHomePageViewController : FCBaseViewController<BMKMapViewDelegate,CLLocationManagerDelegate,FCServiceResponseDelegate,CancelViewDelegate,FCWaitingRequestViewDelegate,CancelReasonViewDelegate>{
     BMKMapView *myMapView;
     NSMutableArray *arrayDrivers;//司机信息
     NSMutableArray *arrayAnn;
@@ -35,7 +37,6 @@ enum ConversationType{
     FCWaitingRequestView *waitingRequestView;
     FCConversationRequest *conversationRequest;
     CLLocationManager *locationManager;//用户定位管理器
-    CLLocationCoordinate2D coorUser;//用户位置
     
     BOOL bubbleCanUse;
     BMKCoordinateRegion newRegion;//存储当前用户位置及5公司范围
@@ -46,6 +47,7 @@ enum ConversationType{
     NSString *mySubAddress;
 }
 
+@property(nonatomic,strong) CancelReasonView *reasonView;
 @property (nonatomic, strong) BMKPointAnnotation *userAnnotation;
 @property (nonatomic, strong) NSNumber *converID,*tripID;
 @property (nonatomic, strong) Passenger *passenger;
@@ -54,10 +56,33 @@ enum ConversationType{
 @property (nonatomic, strong) CancelView *cancelView;
 @property (nonatomic, strong) NSString *myLocation;
 @property (nonatomic, strong) Driver *answerDriver;
+@property (nonatomic) CLLocationCoordinate2D coorUser;//用户位置
+//@property (nonatomic, strong) FCBaseViewController *recordController;
 
+
+
+/*
+ 
+ 显示用户等待应答状态栏，开始创建与司机端对话
+ 
+ */
 - (void)showWaitingPanel:(NSMutableArray *)array;
+
+/*
+ 
+ 添加用户位置标注点
+ 
+ */
 - (void)adUserAnnotation;
+
+/*
+ 
+ 司机应答时 控制显示全部标注点 和 只显示应答司机标注点的切换
+ 
+ */
 - (void)showAllAnnotation:(BOOL)show;//接收司机响应后，只显示当前接收响应的司机位置 其他标注点移除
+
+
 - (void)setMapCenter:(CLLocationDegrees)lat andLng:(CLLocationDegrees)lng;//设置地图中心位置
 
 @end

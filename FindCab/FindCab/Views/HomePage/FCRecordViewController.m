@@ -7,7 +7,7 @@
 //
 
 #import "FCRecordViewController.h"
-#import "FCHomePageViewController.h"
+//#import "FCHomePageViewController.h"
 
 #define TFTag 2000
 #define PRICETAG 1000
@@ -372,6 +372,12 @@
     
     NSDictionary *dict;
     if (isUserLocation) {
+        //我的位置 重新定位
+        FCHomePageViewController *controller = (FCHomePageViewController *)mainContent;
+        [controller performSelector:@selector(showLocation) withObject:nil withObject:nil];
+        self.startLocation = controller.coorUser;
+        self.myLocationName = controller.myLocation;
+        
         dict = [NSDictionary dictionaryWithObjectsAndKeys:
                 [NSString stringWithFormat:@"%@",passenger.uid],@"passenger_id", self.myLocationName,@"start",[NSString stringWithFormat:@"%f",coorUser.latitude],@"start_lat",[NSString stringWithFormat:@"%f",coorUser.longitude],@"start_lng",
                 textEnd.titleLabel.text,@"end",[NSString stringWithFormat:@"%f",_endLocation.latitude],@"end_lat",[NSString stringWithFormat:@"%f",_endLocation.longitude],@"end_lng",@"19:00",@"appointment",[NSString stringWithFormat:@"%d",self.price],@"price",nil];

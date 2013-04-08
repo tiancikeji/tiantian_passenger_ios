@@ -71,10 +71,17 @@
     }
 }
 
+- (void)stopAllTimer
+{
+    [self stopTimer];
+    [self.countTimer invalidate];
+}
+
 - (void)updateStatus{
     timeDown = 90;
     [_time setText:[NSString stringWithFormat:@"%d",timeDown]];
-    [NSTimer scheduledTimerWithTimeInterval:1.0f
+    [self.countTimer invalidate];
+    _countTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
                                      target:self
                                    selector:@selector(count:)
                                    userInfo:nil

@@ -30,5 +30,6 @@
 
 - (void)count:(NSTimer *)timer;
 - (void)stopTimer;
+- (void)stopAllTimer;
 
 @end
