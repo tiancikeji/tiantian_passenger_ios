@@ -19,13 +19,13 @@
         
         [self setBackgroundColor:[UIColor colorWithPatternImage:bg]];
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 250, 40)];
-        [label setCenter:CGPointMake(frame.size.width/2, frame.size.height/5*1)];
-        [label setTextAlignment:NSTextAlignmentCenter];
-        [label setBackgroundColor:[UIColor clearColor]];
-        [label setText:@"确定要取消本次叫车服务吗?"];
-        [label setTextColor:[UIColor whiteColor]];
-        [self addSubview:label];
+        _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 310, 40)];
+        [_titleLabel setCenter:CGPointMake(frame.size.width/2, frame.size.height/5*1)];
+        [_titleLabel setTextAlignment:NSTextAlignmentCenter];
+        [_titleLabel setBackgroundColor:[UIColor clearColor]];
+        [_titleLabel setText:@"确定要取消本次叫车服务吗?"];
+        [_titleLabel setTextColor:[UIColor whiteColor]];
+        [self addSubview:_titleLabel];
         
         UIImage *cancelBg = [UIImage imageNamed:@"sureCancel.png"];
         UIButton *cancel = [UIButton buttonWithType:UIButtonTypeCustom];

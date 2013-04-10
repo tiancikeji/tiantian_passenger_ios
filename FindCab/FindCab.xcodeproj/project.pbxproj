@@ -107,6 +107,8 @@
 		87C17B1216A680580038C262 /* GBUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 87C17B0F16A680580038C262 /* GBUtility.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		87C17B1316A680580038C262 /* GTMBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 87C17B1116A680580038C262 /* GTMBase64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		87CE32A116A99F2800AD141C /* FCDriverInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 87CE32A016A99F2800AD141C /* FCDriverInfoView.m */; };
+		AC1B82C817153DDF0026D792 /* keyGo.png in Resources */ = {isa = PBXBuildFile; fileRef = AC1B82C617153DDF0026D792 /* keyGo.png */; };
+		AC1B82C917153DDF0026D792 /* keyGo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AC1B82C717153DDF0026D792 /* keyGo@2x.png */; };
 		AC1D3F8A1702B659009ED95D /* FCInputLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1D3F891702B659009ED95D /* FCInputLocationViewController.m */; };
 		AC1D3F8D1702B6AA009ED95D /* FCSTView.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1D3F8C1702B6AA009ED95D /* FCSTView.m */; };
 		AC1D3F901702B6CA009ED95D /* FCCustomToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = AC1D3F8F1702B6CA009ED95D /* FCCustomToolbar.m */; };
@@ -385,6 +387,8 @@
 		87C17B1516A6807E0038C262 /* GTMDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
 		87CE329F16A99F2800AD141C /* FCDriverInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCDriverInfoView.h; sourceTree = "<group>"; };
 		87CE32A016A99F2800AD141C /* FCDriverInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCDriverInfoView.m; sourceTree = "<group>"; };
+		AC1B82C617153DDF0026D792 /* keyGo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = keyGo.png; sourceTree = "<group>"; };
+		AC1B82C717153DDF0026D792 /* keyGo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "keyGo@2x.png"; sourceTree = "<group>"; };
 		AC1D3F881702B659009ED95D /* FCInputLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCInputLocationViewController.h; sourceTree = "<group>"; };
 		AC1D3F891702B659009ED95D /* FCInputLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCInputLocationViewController.m; sourceTree = "<group>"; };
 		AC1D3F8B1702B6AA009ED95D /* FCSTView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCSTView.h; path = Map/FCSTView.h; sourceTree = "<group>"; };
@@ -1074,6 +1078,8 @@
 		ACD42DDA17018B37008D3294 /* SearchPlace */ = {
 			isa = PBXGroup;
 			children = (
+				AC1B82C617153DDF0026D792 /* keyGo.png */,
+				AC1B82C717153DDF0026D792 /* keyGo@2x.png */,
 				ACCD88C417055C4C006F3E12 /* btn_style1@2x.png */,
 				ACCD88C517055C4C006F3E12 /* btn_style1A@2x.png */,
 				ACCD88C017055C18006F3E12 /* btn_style1.png */,
@@ -1289,6 +1295,8 @@
 				ACA0A507170C1246003A9D7C /* cancelA@2x.png in Resources */,
 				ACA0A50A170C1290003A9D7C /* cancel.png in Resources */,
 				ACA0A50B170C1290003A9D7C /* cancelA.png in Resources */,
+				AC1B82C817153DDF0026D792 /* keyGo.png in Resources */,
+				AC1B82C917153DDF0026D792 /* keyGo@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

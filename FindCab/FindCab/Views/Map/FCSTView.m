@@ -14,12 +14,11 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        oldHeight = 0.0f;
         [self setBackgroundColor:[UIColor whiteColor]];
         [self setAutoresizesSubviews:YES];
         [self setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
-        
-        [self addTapGuesture];
-        
+                
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(10, 80, 300, 400) style:UITableViewStylePlain];
         _tableView.backgroundView = nil;
         [_tableView setBackgroundColor:[UIColor clearColor]];
@@ -56,10 +55,22 @@
         _searchField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         [_searchField setDelegate:self];
         [_searchField becomeFirstResponder];
-        [_searchField setReturnKeyType:UIReturnKeySearch];
+        [_searchField setReturnKeyType:UIReturnKeyDefault];
         [_searchField setFrame:CGRectMake(5, 0, searchBg.size.width-5, searchBg.size.height)];
         [_searchField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+        [_searchField setClearButtonMode:UITextFieldViewModeWhileEditing];
         [view addSubview:_searchField];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+         
+                                                 selector:@selector(keyboardWillShowDelay:) name:UIKeyboardWillShowNotification object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+         
+                                                 selector:@selector(keyboardDidHide:)
+         
+                                                     name:UIKeyboardDidHideNotification  object:nil];
+        
         self.starting = starting;
         if (starting) {
             myPosition = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"my_location"]];
@@ -68,23 +79,114 @@
             [myPosition setCenter:CGPointMake(4+frame.size.width/2, _searchField.frame.size.height/2)];
             [_searchField addSubview:myPosition];
 //            [_searchField setText:@"我的位置"];
-//            [_searchField selectAll:self];
+//            [_searchField.text selectAll:self];
         }
     }
     return self;
 }
 
--(void)addTapGuesture
+- (void)keyboardWillShowDelay:(NSNotification *)notify
 {
-//    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(confirmAction:)];
-//    tapGesture.delegate = self;
-//    [tapGesture setNumberOfTapsRequired:1];
-//    [_searchField addGestureRecognizer:tapGesture];
+    [self performSelector:@selector(keyboardWillShow:) withObject:notify afterDelay:0];
 }
 
--(void)confirmAction:(UITapGestureRecognizer *)gesture
+- (void)keyboardWillShow:(NSNotification *)notify
 {
-    [_searchField becomeFirstResponder];
+//    self.doneButton.hidden = YES;
+    UIWindow* tempWindow = nil;
+    UIView* keyboard = nil;
+    
+    tempWindow = [[[UIApplication sharedApplication] windows] objectAtIndex:2];
+    
+    if (tempWindow == nil)
+    {
+        return;
+    }
+    
+    int viewCount = [tempWindow.subviews count];
+    
+    ////find key board view.
+    for(int i=0; i<viewCount; i++)
+    {
+        keyboard = [tempWindow.subviews objectAtIndex:i];
+        
+        //keyboard view found; add the custom button to it
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 3.2)
+        {
+            if(([[keyboard description] hasPrefix:@"<UIPeripheralHostView"] == YES) ||(([[keyboard description] hasPrefix:@"<UIKeyboard"] == YES)))
+            {
+                NSLog(@"find UIKeyboard or UIPeripheralHostView");
+                NSDictionary *userInfo = [notify userInfo];
+                NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+                CGRect keyboardRect = [aValue CGRectValue];
+                CGFloat height = keyboardRect.size.height;
+                [self creatDoneButton:height andOldHeight:oldHeight];
+                oldHeight = height;
+                [keyboard addSubview:_doneButton];
+                break;
+            }
+        }
+        else
+        {
+            if([[keyboard description] hasPrefix:@"<UIKeyboard"] == YES)
+            {
+                NSLog(@"find UIKeyboard");
+                break;
+            }
+        }
+    }
+}
+
+- (void)findKeyboard
+{
+    
+}
+
+- (void)creatDoneButton:(CGFloat)keyboardHeight andOldHeight:(CGFloat)pastHeight
+{
+//    if (pastHeight == 252) {
+//        self.doneButton.hidden = YES;
+//        return;
+//    }
+    UIImage *go = [UIImage imageNamed:@"keyGo.png"];
+    // 在键盘第1次弹出时，创建按钮
+    if (self.doneButton == nil) {
+        self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        self.doneButton.hidden=YES;
+        [self.doneButton setFrame:CGRectMake(243,keyboardHeight-go.size.height-4 , go.size.width, go.size.height)];
+
+        // 设置按钮背景图片
+        [self.doneButton setBackgroundImage:go forState:UIControlStateNormal];
+//        [self.doneButton setTitle:@"前往" forState:UIControlStateNormal];   // 设置按钮的位置在恰当的地方
+        [self.doneButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        self.doneButton.titleLabel.font = [UIFont systemFontOfSize:16];
+        
+
+        
+        // 当按钮按下时，触发doneButton方法
+        [self.doneButton addTarget:self action:@selector(doneButton:)  forControlEvents:UIControlEventTouchUpInside];
+    }
+    [self.doneButton setFrame:CGRectMake(243,keyboardHeight-go.size.height-4 , go.size.width, go.size.height)];
+    self.doneButton.hidden = NO;
+}
+
+- (void)keyboardDidHide:(NSNotification *)notify
+{
+    if (self.doneButton) {
+        self.doneButton.hidden=YES;
+    }
+    oldHeight = 0.0f;
+}
+
+- (void)doneButton:(UIButton *)sender
+{
+    [_searchField resignFirstResponder];
+}
+
+
+- (void)cancel:(UIButton *)sender
+{
+    [_delegate cancelClicked];
 }
 
 #pragma mark UITextFieldDelegate
@@ -92,8 +194,7 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     [textField becomeFirstResponder];
-    NSLog(@"textFieldDidBeginEditing");
-    
+    NSLog(@"textFieldDidBeginEditing");    
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
@@ -117,19 +218,5 @@
     [textField resignFirstResponder];
     return YES;
 }
-
-- (void)cancel:(UIButton *)sender
-{
-    [_delegate cancelClicked];
-}
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
 
 @end

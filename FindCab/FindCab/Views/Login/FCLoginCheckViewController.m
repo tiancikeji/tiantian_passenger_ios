@@ -16,8 +16,9 @@
 - (BOOL)checkInData;//验证输入是否正确
 - (void)getVertiCode:(UIButton *)sender;//获取验证码
 - (void)submitButton:(UIButton *)sender;//提交验证
-- (void)countDown;//倒计时
-- (void)intoMap:(NSNumber *)uid haveLogin:(BOOL)login;//进入主页
+- (void)countDown:(NSTimer *)timer;//倒计时
+- (void)intoMap:(NSNumber *)uid;//进入主页
+- (BOOL)isConnected;//是否连接
 
 @end
 
@@ -41,29 +42,20 @@
     self.navigationController.navigationBarHidden = YES;
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self loadContent];
-    
+
+	// Do any additional setup after loading the view.
+}
+
+- (BOOL)isConnected
+{
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     if (![app isConnectionAvailable]  ) {
         [FCHUD showErrorWithStatus:@"请你连接网络"];
+        return NO;
     }
-	// Do any additional setup after loading the view.
+    return YES;
 }
-
-//- (void)createNaviBar{
-//    imgvNavBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 59)];
-//    imgvNavBar.userInteractionEnabled = YES;
-//    imgvNavBar.image = [UIImage imageNamed:@"navi_bar"];//[[UIImage imageNamed:@"title_bar"] stretchableImageWithLeftCapWidth:10 topCapHeight:0];
-//    [self.view addSubview:imgvNavBar];
-//    
-//    labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, imgvNavBar.frame.size.height)];
-//    labelTitle.textAlignment = UITextAlignmentCenter;
-//    labelTitle.font = [UIFont boldSystemFontOfSize:18.0];
-//    //labelTitle.textColor = [UIColor whiteColor];
-//    labelTitle.text = @"手机验证";
-//    labelTitle.backgroundColor = [UIColor clearColor];
-//    [self.view addSubview:labelTitle];
-//}
 
 /* 加载界面 */
 - (void)loadContent{
@@ -135,6 +127,9 @@
  */
 - (void)submitButton:(UIButton *)sender
 {
+    if (![self isConnected]) {
+        return;
+    }
     phoneNumber = self.phoneNumberField.text;
     verfifyCode = self.vertifiCodeField.text;
     
@@ -155,7 +150,7 @@
     [response startQueryAndParse:[NSMutableDictionary dictionaryWithObject:dict forKey:@"passenger"]];
 }
 
-- (void)intoMap:(NSNumber *)userID haveLogin:(BOOL)login
+- (void)intoMap:(NSNumber *)userID
 {
     FCHomePageViewController *homePage = [[FCHomePageViewController alloc] init];
     if (!_passenger) {
@@ -175,13 +170,16 @@
  */
 - (void)getVertiCode:(UIButton *)sender
 {
+    if (![self isConnected]) {
+        return;
+    }
     if (![self checkInData]) {
         return;
     }
     sender.selected = !sender.selected;
     sender.enabled = NO;
     second = 60;
-    [self.getVertifiCodeButton setTitle:@"60" forState:UIControlStateNormal];
+    [self.getVertifiCodeButton setTitle:@"60秒后重获" forState:UIControlStateNormal];
     [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countDown:) userInfo:nil repeats:YES];
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.phoneNumberField.text,@"mobile",nil];
     FCServiceResponse *response = [[FCServiceResponse alloc] init];
@@ -205,7 +203,8 @@
         
         [[NSUserDefaults standardUserDefaults] setObject:_passenger.uid forKey:@"uid"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"haveLogin"];
-        [self intoMap:_passenger.uid haveLogin:YES];
+        [self intoMap:_passenger.uid];
+        [FCHUD showSuccessWithStatus:@"登陆成功"];
     }
 }
 
@@ -223,7 +222,7 @@
 - (void)countDown:(NSTimer *)timer
 {
     --second;
-    [self.getVertifiCodeButton setTitle:[NSString stringWithFormat:@"%d",second] forState:UIControlStateNormal];
+    [self.getVertifiCodeButton setTitle:[NSString stringWithFormat:@"%d后重获",second] forState:UIControlStateNormal];
     if (second == 0) {
         [self.getVertifiCodeButton setTitle:@"获取验证码" forState:UIControlStateNormal];
         [self.getVertifiCodeButton setEnabled:YES];

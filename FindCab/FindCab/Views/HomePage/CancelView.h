@@ -22,6 +22,7 @@
 
 @property(nonatomic,unsafe_unretained) id<CancelViewDelegate> delegate;
 @property(nonatomic,strong) UIView *translucentView;
+@property(nonatomic,strong) UILabel *titleLabel;
 
 - (void)sure:(UIButton *)sender;
 - (void)stillCall:(UIButton *)sender;

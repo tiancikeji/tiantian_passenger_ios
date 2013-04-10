@@ -18,18 +18,21 @@
 - (void)loadAddress:(NSString *)searchLocation;
 @end
 
-@interface FCSTView : UIView<UITextFieldDelegate,UIGestureRecognizerDelegate>
+@interface FCSTView : UIView<UITextFieldDelegate>
 {
     UIImageView *myPosition;
+    CGFloat oldHeight;
 }
 
 @property (nonatomic,strong ,readonly) UITableView *tableView;
-//@property (nonatomic,strong, readonly) UISearchBar *searchBar;
 @property (nonatomic,strong) UITextField *searchField;
 @property (nonatomic, unsafe_unretained) id <FCSTViewDelegate> delegate;
 @property (nonatomic, strong) NSMutableArray *historyArray;
 @property (nonatomic) BOOL starting;
+@property (nonatomic,strong) UIButton *doneButton;
 
 - (id)initWithFrame:(CGRect)frame Starting:(BOOL)starting;
--(void)addTapGuesture;
+- (void)doneButton:(UIButton *)sender;
+- (void)createDoneButton;
+
 @end

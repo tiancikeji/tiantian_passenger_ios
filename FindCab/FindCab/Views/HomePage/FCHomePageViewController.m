@@ -71,8 +71,9 @@
     
     [self loadNoteView];//加载
     [self loadToolBar];
-    [self performSelector:@selector(showLocation) withObject:nil afterDelay:6];
-
+    
+    [self performSelector:@selector(showLocation) withObject:nil afterDelay:3];
+    
     AppDelegate *app = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 
     if (![app isConnectionAvailable]  ) {
@@ -83,7 +84,7 @@
             passenger = [[Passenger alloc] init];
             passenger.uid = [[NSUserDefaults standardUserDefaults] objectForKey:@"uid"];
         }
-        [self getDrivers];
+        [self performSelector:@selector(getDrivers) withObject:nil afterDelay:10];
     }
 }
 
@@ -113,6 +114,7 @@
     newRegion.span.latitudeDelta = 0.03;
     newRegion.span.longitudeDelta = 0.03;
     [myMapView setRegion:newRegion];
+    [self adUserAnnotation];
 }
 /*
  
@@ -389,7 +391,7 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 
 //click cancel/oncar btn
 - (void)clickToolBarBtn:(id)sender{
-    int tag = ((UIButton *)sender).tag;
+//    int tag = ((UIButton *)sender).tag;
     bubbleCanUse = NO;
 //    [self updateConversations:tag==0?ConversationTypeRefuse:ConversationTypeAccept];
     [self showCallBtn:YES];
@@ -489,29 +491,41 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
             NSString *name = placemark.name;
 //            NSString *thoroughFare = placemark.thoroughfare;
             NSString *subThoroughFare = placemark.subThoroughfare;
-            if (cityName == NULL || [cityName isEqualToString:@""]|| cityName == nil) {
+            if (cityName == NULL || [cityName isEqualToString:@""]|| cityName) {
             }else{
                 myCityName = cityName;
             }
-            if ((detail == NULL) || [detail isEqualToString:@""] ||detail== nil) {
+            if ((detail == NULL) || [detail isEqualToString:@""] ||detail) {
             }else{
                 myDetailAddress = detail;
             }
-            if (name == NULL || [name isEqualToString:@""]|| name == nil) {
+            if (name == NULL || [name isEqualToString:@""]|| name) {
             }else{
                 myLocationName = name;
             }
-            if (subThoroughFare == NULL || [subThoroughFare isEqualToString:@""] ||subThoroughFare == nil) {
+            if (subThoroughFare == NULL || [subThoroughFare isEqualToString:@""] ||subThoroughFare ) {
             }else{
                 mySubAddress = subThoroughFare;
             }
         }
     }];
     NSLog(@"%@,%@,%@,%@",myCityName,myDetailAddress,myLocationName,mySubAddress);
-
+//    [self setMapCenter:newLocation.coordinate.latitude andLng:newLocation.coordinate.longitude];
+    if ([myCityName isEqualToString:@"(null)"]) {
+        myCityName = @"";
+    }
+    if ([myDetailAddress isEqualToString:@"(null)"]) {
+        myDetailAddress = @"";
+    }
+    if ([mySubAddress isEqualToString:@"(null)"]) {
+        mySubAddress = @"";
+    }
     _myLocation = [NSString stringWithFormat:@"%@%@%@",myCityName,myDetailAddress,mySubAddress];
+    if ([_myLocation isEqualToString:@""]) {
+        _myLocation = @"无";
+    }
     [self adUserAnnotation];
-    [locationManager stopUpdatingLocation];
+//    [locationManager stopUpdatingLocation];
 }
 
 /* 司机应答后 显示司机信息 */
@@ -613,10 +627,14 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
         _cancelView.hidden = NO;
         _reasonView.hidden = YES;
     }
-
+    if ([waitingRequestView.time.text isEqualToString:@"0"]) {
+        [_cancelView.titleLabel setText:@"暂时没有司机应答，您是否要继续叫车?"];
+    }else{
+        [_cancelView.titleLabel setText:@"确定要取消本次叫车服务吗?"];
+    }
 }
 
-#pragma mark 
+#pragma mark
 #pragma mark CancelViewDelegate
 
 /*
@@ -773,8 +791,8 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
 - (void)showAllAnnotation:(BOOL)show
 {
     if (show) {
-        [self getDrivers];
         [self showLocation];
+        [self getDrivers];
 //        [self adUserAnnotation];
 //        [self addDriverLocation];
     }else{

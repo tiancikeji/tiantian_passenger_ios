@@ -276,6 +276,7 @@
 
 - (void)intoLocation:(UIButton *)sender
 {
+    [FCHUD dismiss];
     FCInputLocationViewController *inputLocation;
     if (sender.tag == TFTag) {
         inputLocation = [[FCInputLocationViewController alloc] initWithNibName:nil bundle:nil starting:YES];
@@ -352,14 +353,10 @@
 - (void)send{
     
     if (!isUserLocation && textStart.titleLabel.text.length == 0) {
-        UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:nil message:@"请输入出发地" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-        [myAlertView show];
-        return;
+        [FCHUD showErrorWithStatus:@"请您输入起点"];
     }
     if (textEnd.titleLabel.text.length == 0 || [textEnd.titleLabel.text isEqualToString:@"请输入目的地"]) {
-        UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:nil message:@"请输入目的地" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-        [myAlertView show];
-        return;
+        [FCHUD showErrorWithStatus:@"请您输入目的地"];
     }
     
     

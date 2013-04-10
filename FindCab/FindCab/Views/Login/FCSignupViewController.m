@@ -169,7 +169,7 @@
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"haveLogin"];
     
     
-    [FCHUD showSuccessWithStatus:@"注册成功" duration:2.5];
+    [FCHUD showSuccessWithStatus:@"注册成功"];
     
     [self performSelector:@selector(showHomePage) withObject:nil afterDelay:2.0];
 }
