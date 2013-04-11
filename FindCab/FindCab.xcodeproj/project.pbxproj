@@ -120,7 +120,13 @@
 		ACA0A507170C1246003A9D7C /* cancelA@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ACA0A505170C1246003A9D7C /* cancelA@2x.png */; };
 		ACA0A50A170C1290003A9D7C /* cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = ACA0A508170C1290003A9D7C /* cancel.png */; };
 		ACA0A50B170C1290003A9D7C /* cancelA.png in Resources */ = {isa = PBXBuildFile; fileRef = ACA0A509170C1290003A9D7C /* cancelA.png */; };
-		ACA75A501712CBFA0093ABE9 /* FCSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA75A4F1712CBFA0093ABE9 /* FCSettingsViewController.m */; };
+		ACA1F23317165DFC00B6981B /* FCSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA1F23017165DFC00B6981B /* FCSettingsViewController.m */; };
+		ACA1F23417165DFC00B6981B /* MyOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA1F23217165DFC00B6981B /* MyOrderViewController.m */; };
+		ACA1F23717165F3F00B6981B /* MyOrderDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA1F23617165F3F00B6981B /* MyOrderDetail.m */; };
+		ACA1F23A171679A600B6981B /* MyOrderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA1F239171679A600B6981B /* MyOrderCell.m */; };
+		ACA1F23C171679DC00B6981B /* MyOrderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ACA1F23B171679DC00B6981B /* MyOrderCell.xib */; };
+		ACA1F2421716A45000B6981B /* FCOrderDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA1F2411716A45000B6981B /* FCOrderDetailViewController.m */; };
+		ACA1F2491716AC9300B6981B /* FCAppointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA1F2481716AC9300B6981B /* FCAppointViewController.m */; };
 		ACCD887317052755006F3E12 /* btn_getCode.png in Resources */ = {isa = PBXBuildFile; fileRef = ACCD886D17052755006F3E12 /* btn_getCode.png */; };
 		ACCD887417052755006F3E12 /* btn_getCodeA.png in Resources */ = {isa = PBXBuildFile; fileRef = ACCD886E17052755006F3E12 /* btn_getCodeA.png */; };
 		ACCD887517052755006F3E12 /* btn_submit.png in Resources */ = {isa = PBXBuildFile; fileRef = ACCD886F17052755006F3E12 /* btn_submit.png */; };
@@ -406,8 +412,19 @@
 		ACA0A505170C1246003A9D7C /* cancelA@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancelA@2x.png"; sourceTree = "<group>"; };
 		ACA0A508170C1290003A9D7C /* cancel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cancel.png; sourceTree = "<group>"; };
 		ACA0A509170C1290003A9D7C /* cancelA.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cancelA.png; sourceTree = "<group>"; };
-		ACA75A4E1712CBFA0093ABE9 /* FCSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCSettingsViewController.h; sourceTree = "<group>"; };
-		ACA75A4F1712CBFA0093ABE9 /* FCSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCSettingsViewController.m; sourceTree = "<group>"; };
+		ACA1F22F17165DFC00B6981B /* FCSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCSettingsViewController.h; sourceTree = "<group>"; };
+		ACA1F23017165DFC00B6981B /* FCSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCSettingsViewController.m; sourceTree = "<group>"; };
+		ACA1F23117165DFC00B6981B /* MyOrderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyOrderViewController.h; sourceTree = "<group>"; };
+		ACA1F23217165DFC00B6981B /* MyOrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyOrderViewController.m; sourceTree = "<group>"; };
+		ACA1F23517165F3F00B6981B /* MyOrderDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyOrderDetail.h; sourceTree = "<group>"; };
+		ACA1F23617165F3F00B6981B /* MyOrderDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyOrderDetail.m; sourceTree = "<group>"; };
+		ACA1F238171679A600B6981B /* MyOrderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyOrderCell.h; sourceTree = "<group>"; };
+		ACA1F239171679A600B6981B /* MyOrderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyOrderCell.m; sourceTree = "<group>"; };
+		ACA1F23B171679DC00B6981B /* MyOrderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyOrderCell.xib; sourceTree = "<group>"; };
+		ACA1F2401716A44F00B6981B /* FCOrderDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCOrderDetailViewController.h; sourceTree = "<group>"; };
+		ACA1F2411716A45000B6981B /* FCOrderDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCOrderDetailViewController.m; sourceTree = "<group>"; };
+		ACA1F2471716AC9300B6981B /* FCAppointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCAppointViewController.h; sourceTree = "<group>"; };
+		ACA1F2481716AC9300B6981B /* FCAppointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCAppointViewController.m; sourceTree = "<group>"; };
 		ACCD886D17052755006F3E12 /* btn_getCode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_getCode.png; sourceTree = "<group>"; };
 		ACCD886E17052755006F3E12 /* btn_getCodeA.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_getCodeA.png; sourceTree = "<group>"; };
 		ACCD886F17052755006F3E12 /* btn_submit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_submit.png; sourceTree = "<group>"; };
@@ -659,6 +676,8 @@
 				875C0E681698514B0092C3FC /* Company.m */,
 				AC1D3F911702C609009ED95D /* AddressInfo.h */,
 				AC1D3F921702C60A009ED95D /* AddressInfo.m */,
+				ACA1F23517165F3F00B6981B /* MyOrderDetail.h */,
+				ACA1F23617165F3F00B6981B /* MyOrderDetail.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -725,7 +744,8 @@
 		871167451697203D00A4DAB4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				AC9B04051712BAAF009BCEA9 /* Setting */,
+				ACA1F2461716AC8E00B6981B /* Appoint */,
+				ACA1F22E17165DFC00B6981B /* Setting */,
 				AC1D3F871702B614009ED95D /* InputLocation */,
 				870D496A169FECF0005CD855 /* MapAnnotations */,
 				875C0EA1169871020092C3FC /* HomePage */,
@@ -996,13 +1016,29 @@
 			name = Login;
 			sourceTree = "<group>";
 		};
-		AC9B04051712BAAF009BCEA9 /* Setting */ = {
+		ACA1F22E17165DFC00B6981B /* Setting */ = {
 			isa = PBXGroup;
 			children = (
-				ACA75A4E1712CBFA0093ABE9 /* FCSettingsViewController.h */,
-				ACA75A4F1712CBFA0093ABE9 /* FCSettingsViewController.m */,
+				ACA1F22F17165DFC00B6981B /* FCSettingsViewController.h */,
+				ACA1F23017165DFC00B6981B /* FCSettingsViewController.m */,
+				ACA1F23117165DFC00B6981B /* MyOrderViewController.h */,
+				ACA1F23217165DFC00B6981B /* MyOrderViewController.m */,
+				ACA1F238171679A600B6981B /* MyOrderCell.h */,
+				ACA1F239171679A600B6981B /* MyOrderCell.m */,
+				ACA1F23B171679DC00B6981B /* MyOrderCell.xib */,
+				ACA1F2401716A44F00B6981B /* FCOrderDetailViewController.h */,
+				ACA1F2411716A45000B6981B /* FCOrderDetailViewController.m */,
 			);
-			name = Setting;
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		ACA1F2461716AC8E00B6981B /* Appoint */ = {
+			isa = PBXGroup;
+			children = (
+				ACA1F2471716AC9300B6981B /* FCAppointViewController.h */,
+				ACA1F2481716AC9300B6981B /* FCAppointViewController.m */,
+			);
+			path = Appoint;
 			sourceTree = "<group>";
 		};
 		ACCD8886170527D9006F3E12 /* Map */ = {
@@ -1297,6 +1333,7 @@
 				ACA0A50B170C1290003A9D7C /* cancelA.png in Resources */,
 				AC1B82C817153DDF0026D792 /* keyGo.png in Resources */,
 				AC1B82C917153DDF0026D792 /* keyGo@2x.png in Resources */,
+				ACA1F23C171679DC00B6981B /* MyOrderCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1358,7 +1395,12 @@
 				ACCD88EC17058F46006F3E12 /* CancelView.m in Sources */,
 				ACD9E8E61709932500261779 /* CancelReasonView.m in Sources */,
 				ACE85C75170AA79F000521C2 /* UserAnnotation.m in Sources */,
-				ACA75A501712CBFA0093ABE9 /* FCSettingsViewController.m in Sources */,
+				ACA1F23317165DFC00B6981B /* FCSettingsViewController.m in Sources */,
+				ACA1F23417165DFC00B6981B /* MyOrderViewController.m in Sources */,
+				ACA1F23717165F3F00B6981B /* MyOrderDetail.m in Sources */,
+				ACA1F23A171679A600B6981B /* MyOrderCell.m in Sources */,
+				ACA1F2421716A45000B6981B /* FCOrderDetailViewController.m in Sources */,
+				ACA1F2491716AC9300B6981B /* FCAppointViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

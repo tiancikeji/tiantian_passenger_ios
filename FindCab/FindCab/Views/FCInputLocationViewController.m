@@ -13,7 +13,6 @@ static NSString *const STCellIdentifier = @"STCell";
 
 @interface FCInputLocationViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
-    FCSTView *_customView;
     BMKMapView *_map;
 }
 @end
@@ -34,17 +33,11 @@ static NSString *const STCellIdentifier = @"STCell";
 
 - (void)loadView
 {
-    FCSTView *view = [[FCSTView alloc] initWithFrame:[[UIScreen mainScreen] bounds] Starting:self.starting];
-    _customView = view;
-    [_customView setDelegate:self];
-    [self setView:view];
-    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *docPath = [paths objectAtIndex:0];
     historyFile = [docPath stringByAppendingPathComponent:@"history.plist"];
     NSArray *history = [[NSArray alloc] initWithContentsOfFile:historyFile];
-    _historyArray = [NSMutableArray arrayWithCapacity:10];
-    
+    _historyArray = [[NSMutableArray alloc] initWithCapacity:10];
     //起点 列表默认第一行是我的位置 
     if (_starting) {
         AddressInfo *info = [[AddressInfo alloc] init];
@@ -77,6 +70,11 @@ static NSString *const STCellIdentifier = @"STCell";
 {
     [super viewDidLoad];
     
+    FCSTView *view = [[FCSTView alloc] initWithFrame:[[UIScreen mainScreen] bounds] Starting:self.starting];
+    self.customView = view;
+    [_customView setDelegate:self];
+    [self setView:self.customView];
+    
     _search = [[BMKSearch alloc] init];
     [_search setDelegate:self];
     [BMKSearch setPageCapacity:9];
@@ -88,10 +86,6 @@ static NSString *const STCellIdentifier = @"STCell";
     [[_customView tableView] setDataSource:self];
     
     _searchDatasource = [NSMutableArray arrayWithCapacity:6];
-//    if ([[_customView tableView] respondsToSelector:@selector(registerClass:forCellReuseIdentifier:)]) {
-//        [[_customView tableView] registerClass:[UITableViewCell class] forCellReuseIdentifier:STCellIdentifier];
-//    }
-	// Do any additional setup after loading the view.
 }
 
 #pragma mark - STViewDelegate Methods

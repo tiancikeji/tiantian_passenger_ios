@@ -285,8 +285,7 @@
     }
     inputLocation.delegate = self;
     inputLocation.coorUser = self.coorUser;
-    [self.navigationController presentModalViewController:inputLocation animated:YES];
-
+    [self presentModalViewController:inputLocation animated:YES];
 }
 
 /* 我的位置清除位置按钮  需求改变 */

@@ -15,6 +15,7 @@
 #import "CancelView.h"
 #import "UserAnnotation.h"
 #import "CancelReasonView.h"
+#import "FCAppointViewController.h"
 //#import "FCRecordViewController.h"
 
 @class FCConversationRequest;
@@ -57,6 +58,7 @@ enum ConversationType{
 @property (nonatomic, strong) NSString *myLocation;
 @property (nonatomic, strong) Driver *answerDriver;
 @property (nonatomic) CLLocationCoordinate2D coorUser;//用户位置
+@property(nonatomic,strong) UIButton *appointCallBtn;
 //@property (nonatomic, strong) FCBaseViewController *recordController;
 
 

@@ -189,7 +189,7 @@
     [response startQueryAndParse:dict];
 }
 
-/* 获取验证码成功 */
+/* 获取验证码成功 登陆成功 */
 - (void)queryFinished:(NSString *)strData
 {
     SBJsonParser *jsonParser = [[SBJsonParser alloc] init];
@@ -203,6 +203,8 @@
         
         [[NSUserDefaults standardUserDefaults] setObject:_passenger.uid forKey:@"uid"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"haveLogin"];
+        [[NSUserDefaults standardUserDefaults] setObject:_phoneNumberField.text forKey:@"phoneNumber"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         [self intoMap:_passenger.uid];
         [FCHUD showSuccessWithStatus:@"登陆成功"];
     }

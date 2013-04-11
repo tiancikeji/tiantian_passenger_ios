@@ -20,7 +20,6 @@
 {
     [super viewDidLoad];
     
-    
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveLogin"]) {
         FCHomePageViewController *homePage = [[FCHomePageViewController alloc] init];
         naviCtrl = [[UINavigationController alloc] initWithRootViewController:homePage];

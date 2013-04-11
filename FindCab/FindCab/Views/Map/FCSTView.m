@@ -23,6 +23,7 @@
         _tableView.backgroundView = nil;
         [_tableView setBackgroundColor:[UIColor clearColor]];
         [[self tableView] setAutoresizingMask:[self autoresizingMask]];
+//        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self addSubview:[self tableView]];
         
         FCCustomToolbar *bar = [[FCCustomToolbar alloc] initWithFrame:CGRectMake(0, 0, 320, 59)];
@@ -61,15 +62,15 @@
         [_searchField setClearButtonMode:UITextFieldViewModeWhileEditing];
         [view addSubview:_searchField];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self
-         
-                                                 selector:@selector(keyboardWillShowDelay:) name:UIKeyboardWillShowNotification object:nil];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-         
-                                                 selector:@selector(keyboardDidHide:)
-         
-                                                     name:UIKeyboardDidHideNotification  object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//         
+//                                                 selector:@selector(keyboardWillShowDelay:) name:UIKeyboardWillShowNotification object:nil];
+//        
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//         
+//                                                 selector:@selector(keyboardDidHide:)
+//         
+//                                                     name:UIKeyboardDidHideNotification  object:nil];
         
         self.starting = starting;
         if (starting) {
@@ -144,10 +145,6 @@
 
 - (void)creatDoneButton:(CGFloat)keyboardHeight andOldHeight:(CGFloat)pastHeight
 {
-//    if (pastHeight == 252) {
-//        self.doneButton.hidden = YES;
-//        return;
-//    }
     UIImage *go = [UIImage imageNamed:@"keyGo.png"];
     // 在键盘第1次弹出时，创建按钮
     if (self.doneButton == nil) {

@@ -24,6 +24,7 @@
 @property (nonatomic, strong)  BMKSearch *search;
 @property (nonatomic, strong)  NSMutableArray *searchDatasource;
 @property (nonatomic) CLLocationCoordinate2D coorUser;
+@property (nonatomic, strong)  FCSTView *customView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil starting:(BOOL)starting;
 

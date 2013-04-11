@@ -37,6 +37,7 @@
 - (void)showWaitingPanel:(NSMutableArray *)array;//显示有多少司机收到响应的状态栏
 - (void)showAnswerCar;//显示响应车的司机信息
 - (void)showCancelView;//显示取消选择
+- (void)clickAppointCall;
 
 @end
 
@@ -78,7 +79,8 @@
 
     if (![app isConnectionAvailable]  ) {
         [FCHUD showErrorWithStatus:@"请你连接网络"];
-    }else{
+    }
+    {
         [FCHUD showWithStatus:@"正在加载"];
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveLogin"]) {
             passenger = [[Passenger alloc] init];
@@ -142,22 +144,40 @@
     if (status) {
         if (!btnCall) {
             btnCall = [UIButton buttonWithType:UIButtonTypeCustom];
-            UIImage *imgCall = [UIImage imageNamed:@"btn_call.png"];
-            UIImage *imgCallHighlight = [UIImage imageNamed:@"btn_callA.png"];
+//            UIImage *imgCall = [UIImage imageNamed:@"btn_call.png"];
+//            UIImage *imgCallHighlight = [UIImage imageNamed:@"btn_callA.png"];
+            UIImage *imgCall = [UIImage imageNamed:@"on_car.png"];
+            UIImage *imgCallHighlight = [UIImage imageNamed:@"on_car.png"];
+
+            
             [btnCall setFrame:CGRectMake(0, 0, imgCall.size.width, imgCall.size.height)];
-            [btnCall setCenter:CGPointMake(imgToolbar.frame.size.width/2, imgToolbar.frame.size.height/2)];
+            [btnCall setCenter:CGPointMake(imgToolbar.frame.size.width/2-80, imgToolbar.frame.size.height/2)];
             [btnCall setBackgroundImage:imgCall forState:UIControlStateNormal];
             [btnCall setTitle:@"开始叫车" forState:UIControlStateNormal];
             [btnCall.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
             [btnCall setBackgroundImage:imgCallHighlight forState:UIControlStateHighlighted];
             [btnCall addTarget:self action:@selector(clickCallBtn) forControlEvents:UIControlEventTouchUpInside];
             [imgToolbar addSubview:btnCall];
+            
+            _appointCallBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            UIImage *imgAppoint = [UIImage imageNamed:@"on_car.png"];
+            UIImage *imgAppointHighlight = [UIImage imageNamed:@"on_car.png"];
+            [_appointCallBtn setFrame:CGRectMake(0, 0, imgCall.size.width, imgCall.size.height)];
+            [_appointCallBtn setCenter:CGPointMake(imgToolbar.frame.size.width/2+80, imgToolbar.frame.size.height/2)];
+            [_appointCallBtn setBackgroundImage:imgAppoint forState:UIControlStateNormal];
+            [_appointCallBtn setTitle:@"预约叫车" forState:UIControlStateNormal];
+            [_appointCallBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
+            [_appointCallBtn setBackgroundImage:imgAppointHighlight forState:UIControlStateHighlighted];
+            [_appointCallBtn addTarget:self action:@selector(clickAppointCall) forControlEvents:UIControlEventTouchUpInside];
+            [imgToolbar addSubview:_appointCallBtn];
+            
         }
         btnCall.hidden = NO;
         
         if (btnCancel) {
             btnCancel.hidden = YES;
             btnOnCar.hidden = YES;
+            _appointCallBtn.hidden = YES;
         }
     }
     else {
@@ -184,6 +204,12 @@
             btnCall.hidden = YES;
         }
     }
+}
+
+- (void)clickAppointCall
+{
+    FCAppointViewController *appoint = [[FCAppointViewController alloc] init];
+    [self.navigationController pushViewController:appoint animated:YES];
 }
 
 /*
@@ -323,7 +349,7 @@
 
 - (void)queryError:(NSError *)errorConnect
 {
-    
+    [FCHUD dismiss];
 }
 
 /*
@@ -491,35 +517,25 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
             NSString *name = placemark.name;
 //            NSString *thoroughFare = placemark.thoroughfare;
             NSString *subThoroughFare = placemark.subThoroughfare;
-            if (cityName == NULL || [cityName isEqualToString:@""]|| cityName) {
+            if (cityName == NULL || [cityName isEqualToString:@""]|| !cityName) {
             }else{
-                myCityName = cityName;
+                myCityName = [NSString stringWithFormat:@"%@",cityName];
             }
-            if ((detail == NULL) || [detail isEqualToString:@""] ||detail) {
+            if ((detail == NULL) || [detail isEqualToString:@""] ||!detail) {
             }else{
-                myDetailAddress = detail;
+                myDetailAddress = [NSString stringWithFormat:@"%@",detail];
             }
-            if (name == NULL || [name isEqualToString:@""]|| name) {
+            if (name == NULL || [name isEqualToString:@""]|| !name) {
             }else{
-                myLocationName = name;
+                myLocationName = [NSString stringWithFormat:@"%@",name];
             }
-            if (subThoroughFare == NULL || [subThoroughFare isEqualToString:@""] ||subThoroughFare ) {
+            if (subThoroughFare == NULL || [subThoroughFare isEqualToString:@""] ||!subThoroughFare ) {
             }else{
-                mySubAddress = subThoroughFare;
+                mySubAddress = [NSString stringWithFormat:@"%@",subThoroughFare];
             }
         }
     }];
     NSLog(@"%@,%@,%@,%@",myCityName,myDetailAddress,myLocationName,mySubAddress);
-//    [self setMapCenter:newLocation.coordinate.latitude andLng:newLocation.coordinate.longitude];
-    if ([myCityName isEqualToString:@"(null)"]) {
-        myCityName = @"";
-    }
-    if ([myDetailAddress isEqualToString:@"(null)"]) {
-        myDetailAddress = @"";
-    }
-    if ([mySubAddress isEqualToString:@"(null)"]) {
-        mySubAddress = @"";
-    }
     _myLocation = [NSString stringWithFormat:@"%@%@%@",myCityName,myDetailAddress,mySubAddress];
     if ([_myLocation isEqualToString:@""]) {
         _myLocation = @"无";

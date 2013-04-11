@@ -1,26 +1,28 @@
 //
-//  FCSettingsViewController.m
+//  FCOrderDetailViewController.m
 //  FindCab
 //
-//  Created by paopao on 13-4-8.
+//  Created by paopao on 13-4-11.
 //  Copyright (c) 2013年 Tiantian. All rights reserved.
 //
 
-#import "FCSettingsViewController.h"
+#import "FCOrderDetailViewController.h"
 
-@interface FCSettingsViewController ()
+@interface FCOrderDetailViewController ()
 
 @end
 
-@implementation FCSettingsViewController
+@implementation FCOrderDetailViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"allBg.png"]]];
         [self createNaviBar];
-        [self setTitle:@"设置"];
-        [self createNaviBtnLeft:[UIImage imageNamed:@"cancel.png"] title:@"返回"];    }
+        [self setStrNaviTitle:@"订单详情"];
+        [self createNaviBtnLeft:[UIImage imageNamed:@"cancel.png"] title:@"返回"];
+    }
     return self;
 }
 
