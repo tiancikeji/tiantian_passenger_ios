@@ -79,8 +79,6 @@
             myPosition.frame = frame;
             [myPosition setCenter:CGPointMake(4+frame.size.width/2, _searchField.frame.size.height/2)];
             [_searchField addSubview:myPosition];
-//            [_searchField setText:@"我的位置"];
-//            [_searchField.text selectAll:self];
         }
     }
     return self;

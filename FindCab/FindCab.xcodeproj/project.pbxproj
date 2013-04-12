@@ -64,8 +64,6 @@
 		875C0E921698544C0092C3FC /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 875C0E851698544C0092C3FC /* SBJsonUTF8Stream.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		875C0E931698544C0092C3FC /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 875C0E871698544C0092C3FC /* SBJsonWriter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		875C0E951698557C0092C3FC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 875C0E941698557C0092C3FC /* SystemConfiguration.framework */; };
-		875C0E9916985F910092C3FC /* FCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 875C0E9816985F910092C3FC /* FCLoginViewController.m */; };
-		875C0EA016986B1F0092C3FC /* FCSignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 875C0E9F16986B1F0092C3FC /* FCSignupViewController.m */; };
 		875C0EA41698715F0092C3FC /* FCHomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 875C0EA31698715F0092C3FC /* FCHomePageViewController.m */; };
 		875C0EA716987BBF0092C3FC /* FCRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 875C0EA616987BBF0092C3FC /* FCRecordViewController.m */; };
 		875C0EA916987DB30092C3FC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 875C0EA816987DB30092C3FC /* AVFoundation.framework */; };
@@ -127,6 +125,12 @@
 		ACA1F23C171679DC00B6981B /* MyOrderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ACA1F23B171679DC00B6981B /* MyOrderCell.xib */; };
 		ACA1F2421716A45000B6981B /* FCOrderDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA1F2411716A45000B6981B /* FCOrderDetailViewController.m */; };
 		ACA1F2491716AC9300B6981B /* FCAppointViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA1F2481716AC9300B6981B /* FCAppointViewController.m */; };
+		ACA1F24B1716BFB500B6981B /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ACA1F24A1716BFB400B6981B /* libsqlite3.0.dylib */; };
+		ACA1F2581716C01E00B6981B /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA1F24E1716C01E00B6981B /* FMDatabase.m */; };
+		ACA1F2591716C01E00B6981B /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA1F2501716C01E00B6981B /* FMDatabaseAdditions.m */; };
+		ACA1F25A1716C01E00B6981B /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA1F2521716C01E00B6981B /* FMDatabasePool.m */; };
+		ACA1F25B1716C01E00B6981B /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA1F2541716C01E00B6981B /* FMDatabaseQueue.m */; };
+		ACA1F25D1716C01E00B6981B /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = ACA1F2571716C01E00B6981B /* FMResultSet.m */; };
 		ACCD887317052755006F3E12 /* btn_getCode.png in Resources */ = {isa = PBXBuildFile; fileRef = ACCD886D17052755006F3E12 /* btn_getCode.png */; };
 		ACCD887417052755006F3E12 /* btn_getCodeA.png in Resources */ = {isa = PBXBuildFile; fileRef = ACCD886E17052755006F3E12 /* btn_getCodeA.png */; };
 		ACCD887517052755006F3E12 /* btn_submit.png in Resources */ = {isa = PBXBuildFile; fileRef = ACCD886F17052755006F3E12 /* btn_submit.png */; };
@@ -340,10 +344,6 @@
 		875C0E861698544C0092C3FC /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		875C0E871698544C0092C3FC /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
 		875C0E941698557C0092C3FC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		875C0E9716985F910092C3FC /* FCLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLoginViewController.h; sourceTree = "<group>"; };
-		875C0E9816985F910092C3FC /* FCLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLoginViewController.m; sourceTree = "<group>"; };
-		875C0E9E16986B1F0092C3FC /* FCSignupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCSignupViewController.h; sourceTree = "<group>"; };
-		875C0E9F16986B1F0092C3FC /* FCSignupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCSignupViewController.m; sourceTree = "<group>"; };
 		875C0EA21698715F0092C3FC /* FCHomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCHomePageViewController.h; sourceTree = "<group>"; };
 		875C0EA31698715F0092C3FC /* FCHomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCHomePageViewController.m; sourceTree = "<group>"; };
 		875C0EA516987BBF0092C3FC /* FCRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCRecordViewController.h; path = HomePage/FCRecordViewController.h; sourceTree = "<group>"; };
@@ -425,6 +425,17 @@
 		ACA1F2411716A45000B6981B /* FCOrderDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCOrderDetailViewController.m; sourceTree = "<group>"; };
 		ACA1F2471716AC9300B6981B /* FCAppointViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCAppointViewController.h; sourceTree = "<group>"; };
 		ACA1F2481716AC9300B6981B /* FCAppointViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCAppointViewController.m; sourceTree = "<group>"; };
+		ACA1F24A1716BFB400B6981B /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		ACA1F24D1716C01E00B6981B /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
+		ACA1F24E1716C01E00B6981B /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
+		ACA1F24F1716C01E00B6981B /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		ACA1F2501716C01E00B6981B /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		ACA1F2511716C01E00B6981B /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
+		ACA1F2521716C01E00B6981B /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
+		ACA1F2531716C01E00B6981B /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
+		ACA1F2541716C01E00B6981B /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
+		ACA1F2561716C01E00B6981B /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
+		ACA1F2571716C01E00B6981B /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
 		ACCD886D17052755006F3E12 /* btn_getCode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_getCode.png; sourceTree = "<group>"; };
 		ACCD886E17052755006F3E12 /* btn_getCodeA.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_getCodeA.png; sourceTree = "<group>"; };
 		ACCD886F17052755006F3E12 /* btn_submit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_submit.png; sourceTree = "<group>"; };
@@ -520,6 +531,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ACA1F24B1716BFB500B6981B /* libsqlite3.0.dylib in Frameworks */,
 				ACD4C9CD1712623D00F260AD /* CoreTelephony.framework in Frameworks */,
 				87967CC116A5A1BD0068CA44 /* CFNetwork.framework in Frameworks */,
 				87967CBF16A5A1AB0068CA44 /* AudioToolbox.framework in Frameworks */,
@@ -576,6 +588,7 @@
 		8711671B16971E0E00A4DAB4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ACA1F24A1716BFB400B6981B /* libsqlite3.0.dylib */,
 				ACD4C9CC1712623D00F260AD /* CoreTelephony.framework */,
 				8754DF5516A6A59E00D21FCA /* iflyMSC.framework */,
 				87967CC016A5A1BD0068CA44 /* CFNetwork.framework */,
@@ -650,6 +663,7 @@
 		871167411697203D00A4DAB4 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				ACA1F24C1716C01E00B6981B /* FMDB */,
 				87C17B0D16A680580038C262 /* MD5 */,
 				879EF6F816A2DD7D00BA914C /* HUD */,
 				875C0E6E1698544C0092C3FC /* SBJSON */,
@@ -899,10 +913,6 @@
 		875C0E9616985F380092C3FC /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				875C0E9716985F910092C3FC /* FCLoginViewController.h */,
-				875C0E9816985F910092C3FC /* FCLoginViewController.m */,
-				875C0E9E16986B1F0092C3FC /* FCSignupViewController.h */,
-				875C0E9F16986B1F0092C3FC /* FCSignupViewController.m */,
 				AC71042917004C0C008AFE5A /* Configurations.h */,
 				AC71042A17004C0C008AFE5A /* FCLoginCheckViewController.h */,
 				AC71042B17004C0C008AFE5A /* FCLoginCheckViewController.m */,
@@ -1039,6 +1049,23 @@
 				ACA1F2481716AC9300B6981B /* FCAppointViewController.m */,
 			);
 			path = Appoint;
+			sourceTree = "<group>";
+		};
+		ACA1F24C1716C01E00B6981B /* FMDB */ = {
+			isa = PBXGroup;
+			children = (
+				ACA1F24D1716C01E00B6981B /* FMDatabase.h */,
+				ACA1F24E1716C01E00B6981B /* FMDatabase.m */,
+				ACA1F24F1716C01E00B6981B /* FMDatabaseAdditions.h */,
+				ACA1F2501716C01E00B6981B /* FMDatabaseAdditions.m */,
+				ACA1F2511716C01E00B6981B /* FMDatabasePool.h */,
+				ACA1F2521716C01E00B6981B /* FMDatabasePool.m */,
+				ACA1F2531716C01E00B6981B /* FMDatabaseQueue.h */,
+				ACA1F2541716C01E00B6981B /* FMDatabaseQueue.m */,
+				ACA1F2561716C01E00B6981B /* FMResultSet.h */,
+				ACA1F2571716C01E00B6981B /* FMResultSet.m */,
+			);
+			path = FMDB;
 			sourceTree = "<group>";
 		};
 		ACCD8886170527D9006F3E12 /* Map */ = {
@@ -1373,8 +1400,6 @@
 				875C0E911698544C0092C3FC /* SBJsonTokeniser.m in Sources */,
 				875C0E921698544C0092C3FC /* SBJsonUTF8Stream.m in Sources */,
 				875C0E931698544C0092C3FC /* SBJsonWriter.m in Sources */,
-				875C0E9916985F910092C3FC /* FCLoginViewController.m in Sources */,
-				875C0EA016986B1F0092C3FC /* FCSignupViewController.m in Sources */,
 				875C0EA41698715F0092C3FC /* FCHomePageViewController.m in Sources */,
 				875C0EA716987BBF0092C3FC /* FCRecordViewController.m in Sources */,
 				870D496D169FED39005CD855 /* FCDriverAnnotationView.m in Sources */,
@@ -1401,6 +1426,11 @@
 				ACA1F23A171679A600B6981B /* MyOrderCell.m in Sources */,
 				ACA1F2421716A45000B6981B /* FCOrderDetailViewController.m in Sources */,
 				ACA1F2491716AC9300B6981B /* FCAppointViewController.m in Sources */,
+				ACA1F2581716C01E00B6981B /* FMDatabase.m in Sources */,
+				ACA1F2591716C01E00B6981B /* FMDatabaseAdditions.m in Sources */,
+				ACA1F25A1716C01E00B6981B /* FMDatabasePool.m in Sources */,
+				ACA1F25B1716C01E00B6981B /* FMDatabaseQueue.m in Sources */,
+				ACA1F25D1716C01E00B6981B /* FMResultSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

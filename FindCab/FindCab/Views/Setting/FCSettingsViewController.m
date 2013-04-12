@@ -79,7 +79,7 @@
         }
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
         NSString *phoneNumber = [[NSUserDefaults standardUserDefaults] objectForKey:@"phoneNumber"];
-        cell.textLabel.text = phoneNumber;
+        cell.textLabel.text = [NSString stringWithFormat:@"手机号码 %@",phoneNumber];
         cell.detailTextLabel.text = @"更改";
     }else{
         if (cell == nil) {

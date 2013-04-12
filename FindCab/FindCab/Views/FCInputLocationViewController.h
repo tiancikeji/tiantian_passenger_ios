@@ -16,8 +16,8 @@
 @interface FCInputLocationViewController : UIViewController<FCSTViewDelegate,BMKMapViewDelegate,BMKSearchDelegate,UIScrollViewDelegate>
 {
     CLLocationCoordinate2D _userLocation;
-    NSMutableArray *_historyArray;
-    NSString *historyFile;
+    NSMutableArray *_historyArray;//存储的搜索历史记录
+    NSString *historyFile;//搜索记录的plist文件
 }
 @property (nonatomic) BOOL starting;
 @property (nonatomic, unsafe_unretained) id <FCInputLocationViewControllerDelegate>delegate;

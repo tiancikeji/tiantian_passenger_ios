@@ -37,12 +37,12 @@
 - (void)showWaitingPanel:(NSMutableArray *)array;//显示有多少司机收到响应的状态栏
 - (void)showAnswerCar;//显示响应车的司机信息
 - (void)showCancelView;//显示取消选择
-- (void)clickAppointCall;
+- (void)clickAppointCall;//点击预约叫车
 
 @end
 
 @implementation FCHomePageViewController
-@synthesize converID,tripID,passenger,arrayReceiveDrivers;
+@synthesize converID,passenger,arrayReceiveDrivers;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -489,15 +489,15 @@ NSString* const AnnotationReuseIdentifier = @"AnnotationReuse";
     if (!annotation || ![aView isSelected])
         return;
     
-    if (!bubbleCanUse) {
-        if ([annotation isKindOfClass:[FCDriverAnnotation class]]) {
-        }else if ([annotation isKindOfClass:[BMKPointAnnotation class]]){
-            NSLog(@"BMKPointAnnotation");
-        }
-        return;
-    }
+//    if (!bubbleCanUse) {
+//        if ([annotation isKindOfClass:[FCDriverAnnotation class]]) {
+//        }else if ([annotation isKindOfClass:[BMKPointAnnotation class]]){
+//            NSLog(@"BMKPointAnnotation");
+//        }
+//        return;
+//    }
     if ([annotation isKindOfClass:[FCDriverAnnotation class]]) {
-        [self showDriverInfo:((FCDriverAnnotation *)annotation).driver];
+//        [self showDriverInfo:((FCDriverAnnotation *)annotation).driver];
     }else if ([annotation isKindOfClass:[BMKPointAnnotation class]]){
 
     }

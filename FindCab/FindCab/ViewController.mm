@@ -20,6 +20,7 @@
 {
     [super viewDidLoad];
     
+    //用户若已登陆 直接进入地图界面 否则进入登陆界面
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveLogin"]) {
         FCHomePageViewController *homePage = [[FCHomePageViewController alloc] init];
         naviCtrl = [[UINavigationController alloc] initWithRootViewController:homePage];

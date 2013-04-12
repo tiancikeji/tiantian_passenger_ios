@@ -15,9 +15,9 @@
 @interface FCRecordViewController ()
 
 - (void)selectPrice:(UIButton *)sender;//选择加价
-//- (void)keyboardWillShow:(NSNotification *)notify;
 - (void)intoLocation:(UIButton *)sender;//进入叫车地点输入界面
 - (void)startIsUserLocation;//用户起点选择我的位置
+
 @end
 
 @implementation FCRecordViewController
@@ -161,8 +161,6 @@
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-//        [button setBackgroundImage:inputBg forState:UIControlStateNormal];
-//        [button setBackgroundImage:inputBg forState:UIControlStateHighlighted];
         [button setBackgroundColor:[UIColor clearColor]];
         
         
@@ -516,6 +514,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 #pragma mark
 #pragma mark FCInputLocationViewControllerDelegate Methods

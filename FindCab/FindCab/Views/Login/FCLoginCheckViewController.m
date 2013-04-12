@@ -12,13 +12,13 @@
 {
     int second;
 }
-- (void)loadContent;
+- (void)loadContent;//加载内容
 - (BOOL)checkInData;//验证输入是否正确
 - (void)getVertiCode:(UIButton *)sender;//获取验证码
 - (void)submitButton:(UIButton *)sender;//提交验证
 - (void)countDown:(NSTimer *)timer;//倒计时
-- (void)intoMap:(NSNumber *)uid;//进入主页
-- (BOOL)isConnected;//是否连接
+- (void)intoMap:(NSNumber *)uid;//进入地图界面
+- (BOOL)isConnected;//判断网络是否连接
 
 @end
 
@@ -116,6 +116,9 @@
     [self.view addSubview:_sumbitButton];
 }
 
+/*
+ 获取手机号 可能是苹果私有 不知是否可以获取 可能会被拒 要查清楚
+ */
 - (NSString *)myNumber{
     return CTSettingCopyMyPhoneNumber();
 }

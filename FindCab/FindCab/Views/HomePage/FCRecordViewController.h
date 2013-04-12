@@ -44,7 +44,7 @@
 @property (nonatomic) int price;
 
 /*
-  存储用户输入的地点和终点信息
+  存储用户输入的起点信息
  */
 @property (nonatomic, strong) NSString *myLocationName;
 
